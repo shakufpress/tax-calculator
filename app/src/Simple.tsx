@@ -1,5 +1,5 @@
-import  React, {useState, useMemo, useCallback} from 'react'
-import { Switch, Route }from 'react-router'
+import  React, {useMemo, useCallback, FormEvent, useEffect} from 'react'
+import { Switch, Route, Redirect }from 'react-router'
 import { useQueryParam, NumberParam, StringParam } from 'use-query-params'
 
 const Label = ({children, id}: {children: string, id: string}) => <label htmlFor={id} className="col-sm-2 col-form-label">{children}</label>
@@ -11,7 +11,8 @@ const YesNo = ({id, label, disabled, defaultValue, onChange}:
     </select>
 </Row>
 
-const defaultSalary = 7550
+const defaultIncome = 7550
+const defaultSex = 'f'
 const Row = ({children, label, id}: {children: JSX.Element, label: string, id: string}) => 
     <div key={id} className="form-group row">
         <Label id={id}>{label}</Label>
@@ -29,15 +30,21 @@ const Output = ({label, value}: {label: string, value: string | number}) =>
 const shekel = (n: number) => `${Number(Math.floor(n)).toLocaleString()} ₪`
 
 const Simple = () => {
-    const [hasPartner, setHasPartner] = useState(false)
-    const [income] = useQueryParam('income', NumberParam)
-    const [hasPartnerQuery] = useQueryParam('partner', StringParam)
-    const [numChildren] = useQueryParam('children', NumberParam)
-    const [partnerIncome] = useQueryParam('partnerIncome', NumberParam)
-    const [sex] = useQueryParam('sex', StringParam)
+    const [hasPartner, setHasPartner] = useQueryParam('hasPartner', StringParam)
+    useEffect(() => {if (typeof hasPartner === 'undefined') setHasPartner('false') }, [hasPartner, setHasPartner])
+    const [income, setIncome] = useQueryParam('income', NumberParam)
+    useEffect(() => {if (typeof income === 'undefined') setIncome(defaultIncome) }, [income, setIncome])
+    const [numChildren, setNumChildren] = useQueryParam('children', NumberParam)
+    useEffect(() => {if (typeof numChildren === 'undefined') setNumChildren(0) }, [numChildren, setNumChildren])
+    const [partnerIncome, setPartnerIncome] = useQueryParam('partnerIncome', NumberParam)
+    useEffect(() => {if (typeof partnerIncome === 'undefined') setPartnerIncome(defaultIncome) }, [partnerIncome, setPartnerIncome])
+    const [sex, setSex] = useQueryParam('sex', StringParam)
+    useEffect(() => {if (typeof sex === 'undefined') setSex(defaultSex) }, [sex, setSex])
+
+    const doesHavePartner = useMemo(() => hasPartner === 'true', [hasPartner])
 
     const bonusPoints = useMemo(() => 2.25 + (sex === 'f' ? 0.5 : 0) + 
-        ((sex === 'f' || hasPartnerQuery === 'false') ? (numChildren || 0) : 0), [sex, hasPartnerQuery, numChildren])
+        ((sex === 'f' || !doesHavePartner) ? (numChildren || 0) : 0), [sex, !doesHavePartner, numChildren])
 
     const perBonusPoint = 2580
     const taxReduction = useMemo(() => bonusPoints * perBonusPoint, [bonusPoints])
@@ -58,9 +65,9 @@ const Simple = () => {
         return Math.max(0, total)
     }, [])
     const taxWithoutReductions = useMemo(() => taxStep(yearlyIncome), [yearlyIncome, taxStep])
-    const yearlyPartnerIncome = useMemo(() => (hasPartnerQuery === 'true' && partnerIncome) ? partnerIncome * 12 : 0, [hasPartnerQuery, partnerIncome])
-    const incomeTax = useMemo(() => taxWithoutReductions - taxReduction, [taxWithoutReductions, taxReduction])
-    const partnerTax = useMemo(() => Math.max(0, hasPartnerQuery === 'true' ? taxStep(yearlyPartnerIncome || 0) - 2.25 * perBonusPoint : 0), [yearlyPartnerIncome, taxStep, hasPartnerQuery])
+    const yearlyPartnerIncome = useMemo(() => (doesHavePartner && partnerIncome) ? partnerIncome * 12 : 0, [doesHavePartner, partnerIncome])
+    const incomeTax = useMemo(() => Math.max(0, taxWithoutReductions - taxReduction), [taxWithoutReductions, taxReduction])
+    const partnerTax = useMemo(() => Math.max(0, doesHavePartner ? taxStep(yearlyPartnerIncome || 0) - 2.25 * perBonusPoint : 0), [yearlyPartnerIncome, taxStep, doesHavePartner])
     const netAnnualPartnerIncome = useMemo(() => yearlyPartnerIncome ? yearlyPartnerIncome - partnerTax : 0, [yearlyPartnerIncome, partnerTax])
     const netIncome = useMemo(() => yearlyIncome - incomeTax, [yearlyIncome, incomeTax])
     const householdIncome = useMemo(() => netIncome + netAnnualPartnerIncome, [netIncome, netAnnualPartnerIncome])
@@ -78,8 +85,12 @@ const Simple = () => {
 
     const monthlyVat = useMemo(() => vatPerDecile[decile || 0], [decile, vatPerDecile])
     const householdAnnualVat = useMemo(() => monthlyVat * 12, [monthlyVat])
-    const myAnnualVat = useMemo(() => householdAnnualVat / (hasPartnerQuery === 'true' ? 2 : 1), [hasPartnerQuery, householdAnnualVat])
+    const myAnnualVat = useMemo(() => householdAnnualVat / (doesHavePartner ? 2 : 1), [doesHavePartner, householdAnnualVat])
     const totalAnnualTax = useMemo(() => myAnnualVat + Math.max(0, incomeTax), [myAnnualVat, incomeTax])
+
+    const submit = (e: FormEvent) => {
+        e.preventDefault()
+    }
 
     return <Switch>
             <Route exact path="/simple">
@@ -90,33 +101,32 @@ const Simple = () => {
             <Route path="/simple/start">
                 <form method="get" action="/simple/results">
                     <Row label="מין" id="sex">
-                        <select>
+                        <select onChange={({target}) => setSex(target.value)} value={sex}>
                         <option value="f">נקבה</option>
                         <option value="m">זכר</option>
                         </select>
                     </Row>
                     <Row label="הכנסה חודשית ממוצעת (כולל קצבאות) ברוטו" id="income">
-                        <input type="number" defaultValue={income || defaultSalary} />
+                        <input type="number" defaultValue={income} onChange={({target}) => setIncome(+target.value)} />
                     </Row>
                     <Row label="שנת לידה" id="birthYear">
                         <select defaultValue="1990">
                             {Array(90).fill(0).map((a, i) => <option key={i}>{1930 + i}</option>)}
                         </select>
                     </Row>
-                    <Row label="מספר ילדים" id="birthYear">
-                        <select defaultValue="0">
+                    <Row label="מספר ילדים" id="numChildren">
+                        <select defaultValue={numChildren} onChange={({target}) => setNumChildren(+target.value)}>
                             {Array(12).fill(0).map((a, i) => <option key={i}>{i}</option>)}
                         </select>
                     </Row>
-                    <YesNo key="kids" label='האם יש לך ילדים?' id="children" />
                     <YesNo key="car" label='האם יש ברשותך רכב?' id="car" />
-                    <YesNo key="partner" label='האם יש לך בן/בת זוג?' id="partner" defaultValue={hasPartner} onChange={setHasPartner} />
+                    <YesNo key="partner" label='האם יש לך בן/בת זוג?' id="partner" defaultValue={doesHavePartner} onChange={v => setHasPartner(String(v))} />
                     <Row label="הכנסה חודשית ממוצעת של בן/בת הזוג (כולל קצבאות) ברוטו" id="partnerIncome">
-                        <input type="number" defaultValue={partnerIncome || defaultSalary} disabled={!hasPartner} />
+                        <input type="number" defaultValue={partnerIncome} disabled={!hasPartner} onChange={v => setPartnerIncome(+v)} />
                     </Row>
                     <div className="form-group row">
                     <div className="col-sm-4">
-                      <button type="submit" className="btn btn-primary">שלח</button>
+                      <button type="submit" className="btn btn-primary" onSubmit={submit}>שלח</button>
                     </div>
                   </div>
                   </form>
