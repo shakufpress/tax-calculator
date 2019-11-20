@@ -1,5 +1,6 @@
 import React from 'react'
 import './App.css'
+import { QueryParamProvider } from 'use-query-params'
 import {
   BrowserRouter as Router,
   Route,
@@ -16,17 +17,22 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <Router>
+      <QueryParamProvider ReactRouterRoute={Route}>
         <header>
-          <nav className="pure-menu pure-menu-horizontal">
-          <a href="#" className="pure-menu-heading pure-menu-link">פתח</a>
-          <ul className="pure-menu-list">
-            <li className="pure-menu-item"><Link to="/">בית</Link></li>
-            <li className="pure-menu-item"><Link to="/about">מה עושים פה</Link></li>
-            <li className="pure-menu-item"><Link to="/simple">מחשבון פשוט</Link></li>
-            <li className="pure-menu-item"><Link to="/complex">מחשבון מורכב</Link></li>
-            <li className="pure-menu-item"><a href="https://shakuf.press">אתר שקוף</a></li>
-            <li className="pure-menu-item"><Link to="/contact">יצירת קשר</Link></li>
+          <nav className="navbar navbar-expand-lg navbar-light bg-light">
+          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul className="navbar-nav mr-auto">
+            <li className="nav-item"><Link className="nav-link" to="/">בית</Link></li>
+            <li className="nav-item"><Link className="nav-link" to="/about">מה עושים פה</Link></li>
+            <li className="nav-item"><Link className="nav-link" to="/simple">מחשבון פשוט</Link></li>
+            <li className="nav-item"><Link  className="nav-link" to="/complex">מחשבון מורכב</Link></li>
+            <li className="nav-item"><a className="nav-link" href="https://shakuf.press">אתר שקוף</a></li>
+            <li className="nav-item"><Link className="nav-link" to="/contact">יצירת קשר</Link></li>
           </ul>
+          </div>
         </nav>
         </header>
         <main>
@@ -43,6 +49,7 @@ const App: React.FC = () => {
           הצטרף אלינו
         </div>
       </footer>
+      </QueryParamProvider>
       </Router>
     </div>
   );
