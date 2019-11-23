@@ -9,7 +9,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Run a one-line script
-      run: CI Flow started
+      run: echo CI Flow started
     - name: Run a multi-line script
       run: |
         echo Add other actions to build,
