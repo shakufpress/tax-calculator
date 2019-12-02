@@ -1,7 +1,7 @@
-import  React, {useState, useMemo, FormEvent} from 'react'
+import  React, {useState, useMemo, FormEvent, useEffect} from 'react'
 import { Switch, Route, Redirect }from 'react-router'
 import calcTax from './formulas'
-
+import { downloadBudget, RawBudgetEntry, fixBudget, BudgetEntry } from './budgetData'
 const Label = ({children, id}: {children: string, id: string}) => <label htmlFor={id} className="col-sm-2 col-form-label">{children}</label>
 const YesNo = ({id, label, disabled, defaultValue, onChange}: 
     {id: string, label: string, disabled?: boolean, defaultValue?: boolean, onChange?: (v: boolean) => void}) => <Row label={label} id={id}>
@@ -10,6 +10,7 @@ const YesNo = ({id, label, disabled, defaultValue, onChange}:
     <option value="false">לא</option>
     </select>
 </Row>
+
 
 const defaultIncome = 7550
 const Row = ({children, label, id}: {children: JSX.Element, label: string, id: string}) => 
@@ -26,8 +27,14 @@ const Output = ({label, value}: {label: string, value: string | number}) =>
         <output className="col-sm-2">{value}</output>
     </div>
 
-const shekel = (n: number) => `${Number(Math.floor(n)).toLocaleString()} ₪`
+const BudgetEntryOutput = ({entry, factor}: {entry: BudgetEntry, factor: number}) => <div className="budgetEntry">
+    <div className="entryTitle">{entry.title}</div>
+    <div className="total shekel">{shekel(entry.total_direction_expense)}</div>
+    <div className="youSpend shekel">{shekel(entry.total_direction_expense * factor)}</div>
+</div>
 
+const shekel = (n: number) => `${Number(Math.floor(n)).toLocaleString()} ₪`
+const percent = (n: number) => `${Number(n * 100).toFixed(8)}%`
 const Simple = () => {
     const [hasPartner, setHasPartner] = useState<boolean>(false)
     const [income, setIncome] = useState<number>(defaultIncome)
@@ -35,6 +42,26 @@ const Simple = () => {
     const [partnerIncome, setPartnerIncome] = useState<number>(defaultIncome)
     const [sex, setSex] = useState<'m' | 'f'>('f')
     const [showResults, setShowResults] = useState<boolean>(false)
+    const [rawBudget, setRawBudget] = useState<RawBudgetEntry[]>([])
+
+    useEffect(() => {
+        if (rawBudget.length) {
+            localStorage.setItem('budget', JSON.stringify(rawBudget))
+        }
+    }, [rawBudget])
+    useEffect(() => {
+        const budgetJson = localStorage.getItem('budget')
+        if (budgetJson) {
+            setRawBudget(JSON.parse(budgetJson))
+        } else {
+            fetch('/budget-backup.json').then(r => r.json()).then(setRawBudget)
+        }
+        downloadBudget().then(setRawBudget)
+    }, [])
+
+
+    const budget = useMemo(() => rawBudget && fixBudget(rawBudget), [rawBudget])
+
 
     const {
         totalAnnualTax,
@@ -52,9 +79,10 @@ const Simple = () => {
         incomeTax,
         annualPartnerIncome,
         bonusPoints,
+        personalBudgetFactor,
         taxReduction
-    } = useMemo(() => calcTax({hasPartner, sex, numChildren, partnerIncome, income}), [
-        hasPartner, sex, numChildren, partnerIncome, income
+    } = useMemo(() => calcTax({hasPartner, sex, numChildren, partnerIncome, income, totalBudget: budget ? budget.total : 0}), [
+        hasPartner, sex, numChildren, partnerIncome, income, budget
     ])
     const submit = (e: FormEvent) => {
         e.preventDefault()
@@ -119,6 +147,12 @@ const Simple = () => {
                 <Output label="כמה מע״מ משק הבית משלם בשנה?" value={shekel(householdAnnualVat)} />
                 <Output label="כמה מע״מ אני משלם בשנה?" value={shekel(myAnnualVat)} />
                 <Output label="כמה מס אני משלם בשנה?" value={shekel(totalAnnualTax)} />
+                {budget.total ? <div className="withBudget">
+                <Output label="פקטור" value={percent(personalBudgetFactor)} />
+                <div className="budget">
+                    {Object.values(budget.budget).map(e => <BudgetEntryOutput key={e.code} entry={e} factor={personalBudgetFactor} />)}
+                </div>
+                </div> : <span>Loading...</span>}
             </Route>
         </Switch>
 }

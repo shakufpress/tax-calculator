@@ -1,11 +1,15 @@
+import {Budget} from './budgetData'
+
 export type TaxInput = {
     hasPartner: boolean
     sex: 'm' | 'f'
     numChildren: number
     income: number
     partnerIncome: number
+    totalBudget: number
 }
-export default function caculateTax({hasPartner, sex, numChildren, partnerIncome, income} : TaxInput) {
+
+export default function caculateTax({hasPartner, sex, numChildren, partnerIncome, income, totalBudget} : TaxInput) {
     const partnerIncomeForCalculation = hasPartner ? partnerIncome : 0 
     const bonusPoints = 2.25 + (sex === 'f' ? 0.5 : 0) + 
         ((sex === 'f' || !hasPartner) ? (numChildren || 0) : 0)
@@ -52,6 +56,7 @@ export default function caculateTax({hasPartner, sex, numChildren, partnerIncome
     const householdAnnualVat = monthlyVat * 12
     const myAnnualVat = householdAnnualVat / (hasPartner ? 2 : 1)
     const totalAnnualTax = myAnnualVat + Math.max(0, incomeTax)
+    const personalBudgetFactor = totalAnnualTax / totalBudget
 
     return {
         totalAnnualTax,
@@ -69,6 +74,7 @@ export default function caculateTax({hasPartner, sex, numChildren, partnerIncome
         incomeTax,
         annualPartnerIncome,
         bonusPoints,
-        taxReduction
+        taxReduction,
+        personalBudgetFactor
     }
 }

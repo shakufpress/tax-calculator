@@ -24,3 +24,20 @@ html {
 .App-link {
   color: #09d3ac;
 }
+
+.budget {
+  display: table;
+}
+.budgetEntry {
+  display: table-row;
+}
+
+.budgetEntry > * {
+  display: table-cell;
+  max-width: 300px;
+  overflow: hidden;
+}
+
+.shekel {
+  white-space: nowrap;
+}
