@@ -1,5 +1,5 @@
-import  React, {useState, useMemo, FormEvent, useEffect} from 'react'
-import { Switch, Route, Redirect }from 'react-router'
+import  React, {useState, useMemo, FormEvent, useEffect, useCallback} from 'react'
+import { Switch, Route, Redirect, Link, useHistory }from 'react-router-dom'
 import calcTax from './formulas'
 import { downloadBudget, RawBudgetEntry, fixBudget, BudgetEntry } from './budgetData'
 const Label = ({children, id}: {children: string, id: string}) => <label htmlFor={id} className="col-sm-2 col-form-label">{children}</label>
@@ -41,7 +41,6 @@ const Simple = () => {
     const [numChildren, setNumChildren] = useState<number>(0)
     const [partnerIncome, setPartnerIncome] = useState<number>(defaultIncome)
     const [sex, setSex] = useState<'m' | 'f'>('f')
-    const [showResults, setShowResults] = useState<boolean>(false)
     const [rawBudget, setRawBudget] = useState<RawBudgetEntry[]>([])
 
     useEffect(() => {
@@ -84,19 +83,20 @@ const Simple = () => {
     } = useMemo(() => calcTax({hasPartner, sex, numChildren, partnerIncome, income, totalBudget: budget ? budget.total : 0}), [
         hasPartner, sex, numChildren, partnerIncome, income, budget
     ])
-    const submit = (e: FormEvent) => {
+
+    const history = useHistory()
+    const submit = useCallback((e: FormEvent) => {
         e.preventDefault()
-        setShowResults(true)
-    }
+        history.push('/simple/results')
+    }, [history])
 
     return <Switch>
             <Route exact path="/simple">
                 <h2>ברוכים הבאים למחשבון הפשוט</h2>
 
-                <a href="/simple/start">יאללה בואו נתקדם</a>
+                <Link to="/simple/start">יאללה בואו נתקדם</Link>
             </Route>
             <Route path="/simple/start">
-            { showResults ? <Redirect to="/simple/results" /> : 
             <form onSubmit={submit}>
                     <Row label="מין" id="sex">
                         <select onChange={({target}) => setSex(target.value as 'm' | 'f')} value={sex}>
@@ -124,10 +124,10 @@ const Simple = () => {
                     </Row>
                     <div className="form-group row">
                     <div className="col-sm-4">
-                      <button type="submit" className="btn btn-primary">שלח</button>
+                      <input type="submit" className="btn btn-primary" value="שלח" />
                     </div>
                   </div>
-                  </form>}
+                  </form>
             </Route>
             <Route path="/simple/results">
                 <h3>עיבוד נתונים</h3>

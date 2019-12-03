@@ -18,15 +18,16 @@ export default function caculateTax({hasPartner, sex, numChildren, partnerIncome
     const taxReduction = bonusPoints * perBonusPoint
     const annualIncome = (income || 0) * 12
 
-    const taxStep = (v: number) => {
+    const taxStep = (income: number) => {
         const steps = [[0, 0], [74640, .1], [107040, .14], [171840, .2], [238800, .31], [496920, .35], [640000, .47], [Infinity, .5]]
         let total = 0
         for (let i = 0; i < steps.length; ++i) {
             const [value, rate] = steps[i]
-            if (v <= value) {
-                return total + (v - value) * rate
+            const [prev] = i ? steps[i - 1] : [0]
+            if (income <= value) {
+                return total + (income - prev) * rate
             } else if (i) {
-                total += (value - steps[i - 1][0]) * rate
+                total += (value - prev) * rate
             }
         }
 

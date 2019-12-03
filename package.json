@@ -7,7 +7,7 @@
     "@types/node": "12.12.8",
     "@types/react": "16.9.11",
     "@types/react-dom": "16.9.4",
-    "@types/react-router-dom": "^5.1.2",
+    "@types/react-router-dom": "^5.1.3",
     "antd": "^3.25.2",
     "antd-rtl": "^3.11.13",
     "gud": "^1.0.0",
