@@ -23,8 +23,8 @@ const Row = ({children, label, id}: {children: JSX.Element, label: string, id: s
 
 const Output = ({label, value}: {label: string, value: string | number}) =>
     <div key={label} className="form-group row">
-        <label  className="col-sm-2 col-form-label">{label}</label>
-        <output className="col-sm-2">{value}</output>
+        <label  className="col-sm-4 col-form-label">{label}</label>
+        <output className="col-sm-4">{value}</output>
     </div>
 
 const BudgetEntryOutput = ({entry, factor}: {entry: BudgetEntry, factor: number}) => <div className="budgetEntry">

@@ -32,7 +32,7 @@ export function fixBudget(rawBudget: RawBudgetEntry[]): Budget {
 
     const roots = budgetValues.filter(({parent}) => !parent)
     const t = roots.map(r => r.total_direction_expense).reduce((a, o) => a + o, 0)
-    return {roots, budget, total: t}
+    return {roots, budget, total: budget['00'] ? budget['00'].total_direction_expense : 0}
 }
 export async function downloadBudget() : Promise<RawBudgetEntry[]> {
     let offset = 0
