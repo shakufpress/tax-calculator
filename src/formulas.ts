@@ -1,5 +1,3 @@
-import {Budget} from './budgetData'
-
 export type TaxInput = {
     hasPartner: boolean
     sex: 'm' | 'f'

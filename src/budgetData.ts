@@ -16,10 +16,12 @@ export type Budget = {
     roots: BudgetEntry[]
     total: number
 }
+
+const maxDepth = 3
 const getQuery = (offset: number) => 
     `https://next.obudget.org/api/query?query=${
         encodeURIComponent(`select code,parent,title,total_direction_expense from budget where year=${
-            new Date().getFullYear()} and total_direction_expense is not null and total_direction_expense != 0 offset ${offset}`)}`
+            new Date().getFullYear()} and depth < ${maxDepth} and total_direction_expense > 0 offset ${offset}`)}`
 
 export function fixBudget(rawBudget: RawBudgetEntry[]): Budget {
     const budget = rawBudget.sort((a, b) => b.total_direction_expense - a.total_direction_expense).map(b => ({[b.code]: {...b}})).reduce((a, o) => Object.assign(a, o), {})  as any as {[code: string]: BudgetEntry}
@@ -30,8 +32,10 @@ export function fixBudget(rawBudget: RawBudgetEntry[]): Budget {
         e.children = budgetValues.filter(({parent}) => parent === code)
     }
 
-    const roots = budgetValues.filter(({parent}) => !parent)
-    const t = roots.map(r => r.total_direction_expense).reduce((a, o) => a + o, 0)
+    let roots = budgetValues.filter(({parent}) => !parent)
+    while (roots.length === 1) {
+        roots = roots[0].children
+    }
     return {roots, budget, total: budget['00'] ? budget['00'].total_direction_expense : 0}
 }
 export async function downloadBudget() : Promise<RawBudgetEntry[]> {

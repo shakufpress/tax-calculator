@@ -26,18 +26,9 @@ html {
 }
 
 .budget {
-  display: table;
-}
-.budgetEntry {
-  display: table-row;
+  text-align: right;
 }
 
-.budgetEntry > * {
-  display: table-cell;
-  max-width: 300px;
-  overflow: hidden;
-}
-
-.shekel {
-  white-space: nowrap;
+.budget svg {
+  display: none;
 }

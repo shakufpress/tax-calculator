@@ -1,7 +1,9 @@
 import  React, {useState, useMemo, FormEvent, useEffect, useCallback} from 'react'
-import { Switch, Route, Redirect, Link, useHistory }from 'react-router-dom'
+import { Switch, Route, Link, useHistory }from 'react-router-dom'
 import calcTax from './formulas'
 import { downloadBudget, RawBudgetEntry, fixBudget, BudgetEntry } from './budgetData'
+const {Treebeard} = require('react-treebeard')
+
 const Label = ({children, id}: {children: string, id: string}) => <label htmlFor={id} className="col-sm-2 col-form-label">{children}</label>
 const YesNo = ({id, label, disabled, defaultValue, onChange}: 
     {id: string, label: string, disabled?: boolean, defaultValue?: boolean, onChange?: (v: boolean) => void}) => <Row label={label} id={id}>
@@ -27,11 +29,18 @@ const Output = ({label, value}: {label: string, value: string | number}) =>
         <output className="col-sm-4">{value}</output>
     </div>
 
-const BudgetEntryOutput = ({entry, factor}: {entry: BudgetEntry, factor: number}) => <div className="budgetEntry">
-    <div className="entryTitle">{entry.title}</div>
-    <div className="total shekel">{shekel(entry.total_direction_expense)}</div>
-    <div className="youSpend shekel">{shekel(entry.total_direction_expense * factor)}</div>
-</div>
+const BudgetNodeOutput = ({entry, factor, depth}: {entry: BudgetEntry, factor: number, depth: number}) : JSX.Element => 
+    <React.Fragment>
+    <div className="budgetEntry">
+        <div className="entryTitle">{entry.title}</div>
+        <div className="total shekel">{shekel(entry.total_direction_expense)}</div>
+        <div className="youSpend shekel">{shekel(entry.total_direction_expense * factor)}</div>
+    </div>
+    <div className={`sub-budget sub-budget-${depth}`}>
+        {entry.children.map(e => <BudgetNodeOutput key={e.code} entry={e} factor={factor} depth={depth + 1} />)}
+    </div>
+</React.Fragment>
+
 
 const shekel = (n: number) => `${Number(Math.floor(n)).toLocaleString()} ₪`
 const percent = (n: number) => `${Number(n * 100).toFixed(8)}%`
@@ -89,6 +98,23 @@ const Simple = () => {
         e.preventDefault()
         history.push('/simple/results')
     }, [history])
+    interface TreeNode {
+        name: string
+        toggled: boolean
+        children: TreeNode[]
+    }
+
+    const toTreeNode = useCallback((e: BudgetEntry) : TreeNode => ({
+        name: `${e.title} : ${shekel(e.total_direction_expense * personalBudgetFactor)}`,
+        toggled: true,
+        children: (e.children || []).map(toTreeNode)
+    }), [personalBudgetFactor])
+
+    const treeBeardData = useMemo(() => ({
+        name: 'תקציב המדינה',
+        toggled: true,
+        children: budget.roots.map(e => toTreeNode(e))
+    }), [budget, toTreeNode])
 
     return <Switch>
             <Route exact path="/simple">
@@ -150,7 +176,7 @@ const Simple = () => {
                 {budget.total ? <div className="withBudget">
                 <Output label="פקטור" value={percent(personalBudgetFactor)} />
                 <div className="budget">
-                    {Object.values(budget.budget).map(e => <BudgetEntryOutput key={e.code} entry={e} factor={personalBudgetFactor} />)}
+                    <Treebeard data={treeBeardData} />
                 </div>
                 </div> : <span>Loading...</span>}
             </Route>
