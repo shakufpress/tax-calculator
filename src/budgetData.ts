@@ -18,7 +18,7 @@ export type Budget = {
 }
 
 const maxDepth = 3
-const getQuery = (offset: number) => 
+const getQuery = (offset: number) =>
     `https://next.obudget.org/api/query?query=${
         encodeURIComponent(`select code,parent,title,total_direction_expense from budget where year=${
             new Date().getFullYear()} and depth < ${maxDepth} and total_direction_expense > 0 offset ${offset}`)}`
@@ -44,8 +44,8 @@ export async function downloadBudget() : Promise<RawBudgetEntry[]> {
     let total = 0
 
     while (!rawBudget.length || rawBudget.length !== total) {
-        const resp = await fetch(getQuery(offset))
-        const raw = await resp.json()
+        const resp = await fetch(getQuery(offset));
+        const raw = await resp.json();
         rawBudget = [...rawBudget, ...raw.rows]
         if (!raw.rows.length) {
             break;

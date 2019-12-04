@@ -1,11 +1,11 @@
 import  React, {useState, useMemo, FormEvent, useEffect, useCallback} from 'react'
 import { Switch, Route, Link, useHistory }from 'react-router-dom'
-import calcTax from './formulas'
+
 import { downloadBudget, RawBudgetEntry, fixBudget, BudgetEntry } from './budgetData'
-const {Treebeard} = require('react-treebeard')
+import ShowResults from './ShowResults';
 
 const Label = ({children, id}: {children: string, id: string}) => <label htmlFor={id} className="col-sm-2 col-form-label">{children}</label>
-const YesNo = ({id, label, disabled, defaultValue, onChange}: 
+const YesNo = ({id, label, disabled, defaultValue, onChange}:
     {id: string, label: string, disabled?: boolean, defaultValue?: boolean, onChange?: (v: boolean) => void}) => <Row label={label} id={id}>
     <select id={id} name={id} disabled={disabled} defaultValue={defaultValue ? 'true' : 'false'} onChange={(e) => onChange && onChange(e.target.value === 'true')}>
     <option value="true">כן</option>
@@ -15,7 +15,7 @@ const YesNo = ({id, label, disabled, defaultValue, onChange}:
 
 
 const defaultIncome = 7550
-const Row = ({children, label, id}: {children: JSX.Element, label: string, id: string}) => 
+const Row = ({children, label, id}: {children: JSX.Element, label: string, id: string}) =>
     <div key={id} className="form-group row">
         <Label id={id}>{label}</Label>
         <div className="col-sm-2">
@@ -29,7 +29,7 @@ const Output = ({label, value}: {label: string, value: string | number}) =>
         <output className="col-sm-4">{value}</output>
     </div>
 
-const BudgetNodeOutput = ({entry, factor, depth}: {entry: BudgetEntry, factor: number, depth: number}) : JSX.Element => 
+const BudgetNodeOutput = ({entry, factor, depth}: {entry: BudgetEntry, factor: number, depth: number}) : JSX.Element =>
     <React.Fragment>
     <div className="budgetEntry">
         <div className="entryTitle">{entry.title}</div>
@@ -70,51 +70,11 @@ const Simple = () => {
 
     const budget = useMemo(() => rawBudget && fixBudget(rawBudget), [rawBudget])
 
-
-    const {
-        totalAnnualTax,
-        annualIncome,
-        netIncome,
-        householdIncome,
-        netMonthlyHouseholdIncome,
-        decile,
-        monthlyVat,
-        myAnnualVat,
-        taxWithoutReductions,
-        householdAnnualVat,
-        netAnnualPartnerIncome,
-        partnerTax,
-        incomeTax,
-        annualPartnerIncome,
-        bonusPoints,
-        personalBudgetFactor,
-        taxReduction
-    } = useMemo(() => calcTax({hasPartner, sex, numChildren, partnerIncome, income, totalBudget: budget ? budget.total : 0}), [
-        hasPartner, sex, numChildren, partnerIncome, income, budget
-    ])
-
     const history = useHistory()
     const submit = useCallback((e: FormEvent) => {
         e.preventDefault()
         history.push('/simple/results')
     }, [history])
-    interface TreeNode {
-        name: string
-        toggled: boolean
-        children: TreeNode[]
-    }
-
-    const toTreeNode = useCallback((e: BudgetEntry) : TreeNode => ({
-        name: `${e.title} : ${shekel(e.total_direction_expense * personalBudgetFactor)}`,
-        toggled: true,
-        children: (e.children || []).map(toTreeNode)
-    }), [personalBudgetFactor])
-
-    const treeBeardData = useMemo(() => ({
-        name: 'תקציב המדינה',
-        toggled: true,
-        children: budget.roots.map(e => toTreeNode(e))
-    }), [budget, toTreeNode])
 
     return <Switch>
             <Route exact path="/simple">
@@ -156,29 +116,7 @@ const Simple = () => {
                   </form>
             </Route>
             <Route path="/simple/results">
-                <h3>עיבוד נתונים</h3>
-                <Output label="הכנסה שנתית" value={shekel(annualIncome)} />
-                <Output label="הכנסה נטו שלי (שנתי)" value={shekel(netIncome)} />
-                <Output label="הכנסה שנתית של בן/בת הזוג" value={shekel(annualPartnerIncome)} />
-                <Output label="מס הכנסה ללא נקודות זיכוי" value={shekel(taxWithoutReductions)} />
-                <Output label="מספר נקודות זיכוי" value={bonusPoints} />
-                <Output label="הפחת מס בזכות נקודות זיכוי" value={shekel(taxReduction)} />
-                <Output label="סה״כ מס הכנסה שנתי" value={shekel(incomeTax)} />
-                <Output label="מס שבן הזוג משלם" value={shekel(partnerTax)} />
-                <Output label="הכנסה נטו של בן הזוג (שנתי)" value={shekel(netAnnualPartnerIncome)} />
-                <Output label="הכנסה נטו למשק הבית" value={shekel(householdIncome)} />
-                <Output label="חישוב הכנסה נטו חודשית" value={shekel(netMonthlyHouseholdIncome)} />
-                <Output label="עשירון משק הבית" value={decile || 0} />
-                <Output label="כמה מע״מ משק הבית משלם בחודש?" value={shekel(monthlyVat)} />
-                <Output label="כמה מע״מ משק הבית משלם בשנה?" value={shekel(householdAnnualVat)} />
-                <Output label="כמה מע״מ אני משלם בשנה?" value={shekel(myAnnualVat)} />
-                <Output label="כמה מס אני משלם בשנה?" value={shekel(totalAnnualTax)} />
-                {budget.total ? <div className="withBudget">
-                <Output label="פקטור" value={percent(personalBudgetFactor)} />
-                <div className="budget">
-                    <Treebeard data={treeBeardData} />
-                </div>
-                </div> : <span>Loading...</span>}
+                <ShowResults hasPartner={hasPartner} sex={sex} numChildren={numChildren} partnerIncome={partnerIncome} income={income} budget={budget} />
             </Route>
         </Switch>
 }
