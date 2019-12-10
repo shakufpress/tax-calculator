@@ -24,7 +24,8 @@ const getQuery = (offset: number) =>
             new Date().getFullYear()} and depth < ${maxDepth} and total_direction_expense > 0 offset ${offset}`)}`
 
 export function fixBudget(rawBudget: RawBudgetEntry[]): Budget {
-    const budget = rawBudget.sort((a, b) => b.total_direction_expense - a.total_direction_expense).map(b => ({[b.code]: {...b}})).reduce((a, o) => Object.assign(a, o), {})  as any as {[code: string]: BudgetEntry}
+    //const budget = rawBudget.sort((a, b) => b.total_direction_expense - a.total_direction_expense).map(b => ({[b.code]: {...b}})).reduce((a, o) => Object.assign(a, o), {})  as any as {[code: string]: BudgetEntry}
+    const budget = rawBudget.map(b => ({[b.code]: {...b}})).reduce((a, o) => Object.assign(a, o), {})  as any as {[code: string]: BudgetEntry}
     const budgetValues = Object.values(budget)
     for (const code in budget) {
         const e = budget[code]

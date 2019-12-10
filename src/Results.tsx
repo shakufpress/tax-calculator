@@ -1,9 +1,12 @@
 import React, { useMemo, useCallback } from 'react';
 import { Tabs } from 'antd';
-import calcTax, { TaxInput } from './formulas'
+import calcTax, { TaxInput, TreeNode } from './formulas'
 import { BudgetEntry, Budget } from './budgetData';
+import TaxPieChart from './TaxPieChart';
+import TaxBarChart from './TaxBarChart';
 const {Treebeard} = require('react-treebeard')
 const { TabPane } = Tabs;
+
 
 const callback = (key: any) => {
     console.log(key);
@@ -17,12 +20,6 @@ const Output = ({label, value}: {label: string, value: string | number}) =>
 
 const shekel = (n: number) => `${Number(Math.floor(n)).toLocaleString()} ₪`;
 const percent = (n: number) => `${Number(n * 100).toFixed(8)}%`;
-
-interface TreeNode {
-    name: string
-    toggled: boolean
-    children: TreeNode[]
-}
 
 export interface TaxData {
     annualIncome: number;
@@ -53,25 +50,31 @@ export interface IncomeData {
     budget: Budget;
 }
 
-const ShowResults = (incomeData: TaxInput) => {
+const Results = (incomeData: TaxInput) => {
     const tax: TaxData = useMemo(() => calcTax(incomeData), [
         incomeData.hasPartner, incomeData.sex, incomeData.numChildren, incomeData.partnerIncome, incomeData.income, incomeData.budget
     ])
 
 const toTreeNode = useCallback((e: BudgetEntry) : TreeNode => ({
         name: `${e.title} : ${shekel(e.total_direction_expense * tax.personalBudgetFactor)}`,
+        code: e.code,
+        title: e.title,
+        value: Math.round(e.total_direction_expense * tax.personalBudgetFactor),
         toggled: true,
         children: (e.children || []).map(toTreeNode)
     }), [tax.personalBudgetFactor])
 
 const treeBeardData = useMemo(() => ({
         name: 'תקציב המדינה',
+        code: '0',
+        title: 'תקציב המדינה',
+        value: incomeData.income,
         toggled: true,
         children: incomeData.budget.roots.map(e => toTreeNode(e))
     }), [incomeData.budget, toTreeNode])
 
     return (<div>
-        <Tabs defaultActiveKey="1" onChange={callback} tabPosition="right">
+        <Tabs defaultActiveKey="3" onChange={callback} tabPosition="right">
             <TabPane tab="נתוני הכנסה" key="1">
             <h3>עיבוד נתונים</h3>
                 <Output label="הכנסה שנתית" value={shekel(tax.annualIncome)} />
@@ -100,10 +103,13 @@ const treeBeardData = useMemo(() => ({
                 </div> : <span>Loading...</span>}
             </TabPane>
             <TabPane tab="תרשים התפלגות" key="3">
-                D3 based charts
+                <TaxPieChart data={treeBeardData}/>
+            </TabPane>
+            <TabPane tab="תרשים עמודות" key="4">
+                <TaxBarChart data={treeBeardData}/>
             </TabPane>
   </Tabs>,
     </div>);
 }
 
-export default ShowResults;
+export default Results;

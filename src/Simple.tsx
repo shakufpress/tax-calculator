@@ -2,7 +2,7 @@ import  React, {useState, useMemo, FormEvent, useEffect, useCallback} from 'reac
 import { Switch, Route, Link, useHistory }from 'react-router-dom'
 
 import { downloadBudget, RawBudgetEntry, fixBudget, BudgetEntry } from './budgetData'
-import ShowResults from './ShowResults';
+import Results from './Results';
 
 const Label = ({children, id}: {children: string, id: string}) => <label htmlFor={id} className="col-sm-2 col-form-label">{children}</label>
 const YesNo = ({id, label, disabled, defaultValue, onChange}:
@@ -23,11 +23,11 @@ const Row = ({children, label, id}: {children: JSX.Element, label: string, id: s
         </div>
     </div>
 
-const Output = ({label, value}: {label: string, value: string | number}) =>
-    <div key={label} className="form-group row">
-        <label  className="col-sm-4 col-form-label">{label}</label>
-        <output className="col-sm-4">{value}</output>
-    </div>
+// const Output = ({label, value}: {label: string, value: string | number}) =>
+//     <div key={label} className="form-group row">
+//         <label  className="col-sm-4 col-form-label">{label}</label>
+//         <output className="col-sm-4">{value}</output>
+//     </div>
 
 const BudgetNodeOutput = ({entry, factor, depth}: {entry: BudgetEntry, factor: number, depth: number}) : JSX.Element =>
     <React.Fragment>
@@ -43,7 +43,7 @@ const BudgetNodeOutput = ({entry, factor, depth}: {entry: BudgetEntry, factor: n
 
 
 const shekel = (n: number) => `${Number(Math.floor(n)).toLocaleString()} ₪`
-const percent = (n: number) => `${Number(n * 100).toFixed(8)}%`
+//const percent = (n: number) => `${Number(n * 100).toFixed(8)}%`
 const Simple = () => {
     const [hasPartner, setHasPartner] = useState<boolean>(false)
     const [income, setIncome] = useState<number>(defaultIncome)
@@ -116,7 +116,7 @@ const Simple = () => {
                   </form>
             </Route>
             <Route path="/simple/results">
-                <ShowResults hasPartner={hasPartner} sex={sex} numChildren={numChildren} partnerIncome={partnerIncome} income={income} budget={budget} />
+                <Results hasPartner={hasPartner} sex={sex} numChildren={numChildren} partnerIncome={partnerIncome} income={income} budget={budget} />
             </Route>
         </Switch>
 }

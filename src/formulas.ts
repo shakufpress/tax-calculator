@@ -9,6 +9,15 @@ export type TaxInput = {
     budget: Budget
 }
 
+export interface TreeNode {
+    name: string;
+    code: string;
+    title: string;
+    value: number;
+    toggled: boolean;
+    children: TreeNode[];
+}
+
 export default function caculateTax({hasPartner, sex, numChildren, partnerIncome, income, budget} : TaxInput) {
     const partnerIncomeForCalculation = hasPartner ? partnerIncome : 0
     const bonusPoints = 2.25 + (sex === 'f' ? 0.5 : 0) +
