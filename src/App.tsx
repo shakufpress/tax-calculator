@@ -1,6 +1,6 @@
-import React from 'react'
-import './App.css'
-import { QueryParamProvider } from 'use-query-params'
+import React from 'react';
+import './App.css';
+import { QueryParamProvider } from 'use-query-params';
 import {
   BrowserRouter as Router,
   Route,

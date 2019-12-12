@@ -29,7 +29,7 @@ export default class TaxPieChart extends PureComponent<TaxPieChartOwnProps> {
         const data = this.props.data;
 
         const secondLevel: any = [];
-        const topLevel = data.children.filter(d => d.code !== "00").map((budgetItem: TreeNode) => {
+        const topLevel = data.children.map((budgetItem: TreeNode) => {
             budgetItem.children.forEach((child: TreeNode) => {
                 secondLevel.push({ name: child.title, value: child.value });
             });

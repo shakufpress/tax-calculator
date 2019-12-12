@@ -3,7 +3,7 @@ import { Tabs } from 'antd';
 import calcTax, { TaxInput, TreeNode } from './formulas'
 import { BudgetEntry, Budget } from './budgetData';
 import TaxPieChart from './TaxPieChart';
-import TaxBarChart from './TaxBarChart';
+import TaxBarChart from './TaxBarChartView';
 const {Treebeard} = require('react-treebeard')
 const { TabPane } = Tabs;
 
@@ -73,8 +73,10 @@ const treeBeardData = useMemo(() => ({
         children: incomeData.budget.roots.map(e => toTreeNode(e))
     }), [incomeData.budget, toTreeNode])
 
+    treeBeardData.children = treeBeardData.children.filter(d => d.code !== "00");
+
     return (<div>
-        <Tabs defaultActiveKey="3" onChange={callback} tabPosition="right">
+        <Tabs defaultActiveKey="4" onChange={callback} tabPosition="right">
             <TabPane tab="נתוני הכנסה" key="1">
             <h3>עיבוד נתונים</h3>
                 <Output label="הכנסה שנתית" value={shekel(tax.annualIncome)} />
