@@ -2,7 +2,7 @@ import  React, {useState, useMemo, FormEvent, useEffect, useCallback} from 'reac
 import { Switch, Route, Link, useHistory }from 'react-router-dom'
 
 import { downloadBudget, RawBudgetEntry, fixBudget, BudgetEntry } from './budgetData'
-import Results from './Results';
+import Results from './results/Results';
 
 const Label = ({children, id}: {children: string, id: string}) => <label htmlFor={id} className="col-sm-2 col-form-label">{children}</label>
 const YesNo = ({id, label, disabled, defaultValue, onChange}:

@@ -28,7 +28,6 @@ const App: React.FC = () => {
             <li className="nav-item"><Link className="nav-link" to="/">בית</Link></li>
             <li className="nav-item"><Link className="nav-link" to="/about">מה עושים פה</Link></li>
             <li className="nav-item"><Link className="nav-link" to="/simple">מחשבון פשוט</Link></li>
-            <li className="nav-item"><Link  className="nav-link" to="/complex">מחשבון מורכב</Link></li>
             <li className="nav-item"><a className="nav-link" href="https://shakuf.press">אתר שקוף</a></li>
             <li className="nav-item"><Link className="nav-link" to="/contact">יצירת קשר</Link></li>
           </ul>

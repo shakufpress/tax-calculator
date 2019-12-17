@@ -1,9 +1,10 @@
 import React, { useMemo, useCallback } from 'react';
 import { Tabs } from 'antd';
 import calcTax, { TaxInput, TreeNode } from './formulas'
-import { BudgetEntry, Budget } from './budgetData';
+import { BudgetEntry, Budget } from '../budgetData';
 import TaxPieChart from './TaxPieChart';
 import TaxBarChart from './TaxBarChartView';
+import TaxPieChartsView from './TaxPieChartsView';
 const {Treebeard} = require('react-treebeard')
 const { TabPane } = Tabs;
 
@@ -76,7 +77,7 @@ const treeBeardData = useMemo(() => ({
     treeBeardData.children = treeBeardData.children.filter(d => d.code !== "00");
 
     return (<div>
-        <Tabs defaultActiveKey="4" onChange={callback} tabPosition="right">
+        <Tabs defaultActiveKey="1" onChange={callback} tabPosition="right">
             <TabPane tab="נתוני הכנסה" key="1">
             <h3>עיבוד נתונים</h3>
                 <Output label="הכנסה שנתית" value={shekel(tax.annualIncome)} />
@@ -105,10 +106,13 @@ const treeBeardData = useMemo(() => ({
                 </div> : <span>Loading...</span>}
             </TabPane>
             <TabPane tab="תרשים התפלגות" key="3">
-                <TaxPieChart data={treeBeardData}/>
+                <TaxPieChart data={treeBeardData.children}/>
             </TabPane>
             <TabPane tab="תרשים עמודות" key="4">
                 <TaxBarChart data={treeBeardData}/>
+            </TabPane>
+            <TabPane tab="תרשימי התפלגות" key="5">
+                <TaxPieChartsView data={treeBeardData}/>
             </TabPane>
   </Tabs>,
     </div>);

@@ -20,7 +20,7 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, nam
 };
 
 interface TaxPieChartOwnProps {
-    data: TreeNode;
+    data: TreeNode[];
 }
 
 export default class TaxPieChart extends PureComponent<TaxPieChartOwnProps> {
@@ -29,7 +29,7 @@ export default class TaxPieChart extends PureComponent<TaxPieChartOwnProps> {
         const data = this.props.data;
 
         const secondLevel: any = [];
-        const topLevel = data.children.map((budgetItem: TreeNode) => {
+        const topLevel = data.map((budgetItem: TreeNode) => {
             budgetItem.children.forEach((child: TreeNode) => {
                 secondLevel.push({ name: child.title, value: child.value });
             });

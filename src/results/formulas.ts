@@ -1,4 +1,4 @@
-import { Budget } from "./budgetData"
+import { Budget } from "../budgetData"
 
 export type TaxInput = {
     hasPartner: boolean
