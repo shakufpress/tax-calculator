@@ -34,12 +34,14 @@ export function fixBudget(rawBudget: RawBudgetEntry[]): Budget {
         const e = budget[code]
         e.parentEntry = e.parent ? budget[e.parent] : null
         e.children = budgetValues.filter(({parent}) => parent === code)
+        e.children.sort((a, b) => b.total_direction_expense - a.total_direction_expense)
     }
 
     let roots = budgetValues.filter(({parent}) => !parent)
     while (roots.length === 1) {
         roots = roots[0].children
     }
+    roots.sort((a, b) => b.total_direction_expense - a.total_direction_expense)
     return {roots, budget, total: budget['00'] ? budget['00'].total_direction_expense : 0}
 }
 export async function downloadBudget() : Promise<RawBudgetEntry[]> {
