@@ -5,13 +5,9 @@ import { BudgetEntry, Budget } from '../budgetData';
 import TaxPieChart from './TaxPieChart';
 import TaxBarChart from './TaxBarChartView';
 import TaxPieChartsView from './TaxPieChartsView';
+import { useParams, useHistory } from "react-router-dom"
 const {Treebeard} = require('react-treebeard')
 const { TabPane } = Tabs;
-
-
-const callback = (key: any) => {
-    console.log(key);
-}
 
 const Output = ({label, value}: {label: string, value: string | number}) =>
     <div key={label} className="form-group row">
@@ -75,10 +71,17 @@ const treeBeardData = useMemo(() => ({
     }), [incomeData, toTreeNode])
 
     treeBeardData.children = treeBeardData.children.filter(d => d.code !== "00");
+    const history = useHistory()
+
+    const onTabChange = useCallback(key => {
+        history.push(`/simple/results/${key}`)
+    }, [history])
+
+    const { resultKey } = useParams()
 
     return (<div>
-        <Tabs defaultActiveKey="1" onChange={callback} tabPosition="right">
-            <TabPane tab="נתוני הכנסה" key="1">
+        <Tabs defaultActiveKey={resultKey} onChange={onTabChange} tabPosition="right">
+            <TabPane tab="נתוני הכנסה" key="income">
             <h3>עיבוד נתונים</h3>
                 <Output label="הכנסה שנתית" value={shekel(tax.annualIncome)} />
                 <Output label="הכנסה נטו שלי (שנתי)" value={shekel(tax.netIncome)} />
@@ -97,7 +100,7 @@ const treeBeardData = useMemo(() => ({
                 <Output label="כמה מע״מ אני משלם בשנה?" value={shekel(tax.myAnnualVat)} />
                 <Output label="כמה מס אני משלם בשנה?" value={shekel(tax.totalAnnualTax)} />
             </TabPane>
-            <TabPane tab="התפלגות מס" key="2">
+            <TabPane tab="התפלגות מס" key="tax">
                 {incomeData.budget.total ? <div className="withBudget">
                     <Output label="פקטור" value={percent(tax.personalBudgetFactor)} />
                     <div className="budget">
@@ -105,13 +108,13 @@ const treeBeardData = useMemo(() => ({
                     </div>
                 </div> : <span>Loading...</span>}
             </TabPane>
-            <TabPane tab="תרשים התפלגות" key="3">
+            <TabPane tab="תרשים התפלגות" key="pie">
                 <TaxPieChart data={treeBeardData.children}/>
             </TabPane>
-            <TabPane tab="תרשים עמודות" key="4">
+            <TabPane tab="תרשים עמודות" key="bar">
                 <TaxBarChart data={treeBeardData}/>
             </TabPane>
-            <TabPane tab="תרשימי התפלגות" key="5">
+            <TabPane tab="תרשימי התפלגות" key="charts">
                 <TaxPieChartsView data={treeBeardData}/>
             </TabPane>
   </Tabs>,
