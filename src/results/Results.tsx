@@ -53,7 +53,7 @@ export interface IncomeData {
 
 const Results = (incomeData: TaxInput) => {
     const tax: TaxData = useMemo(() => calcTax(incomeData), [
-        incomeData.hasPartner, incomeData.sex, incomeData.numChildren, incomeData.partnerIncome, incomeData.income, incomeData.budget
+        incomeData
     ])
 
 const toTreeNode = useCallback((e: BudgetEntry) : TreeNode => ({
@@ -72,7 +72,7 @@ const treeBeardData = useMemo(() => ({
         value: incomeData.income,
         toggled: true,
         children: incomeData.budget.roots.map(e => toTreeNode(e))
-    }), [incomeData.budget, toTreeNode])
+    }), [incomeData, toTreeNode])
 
     treeBeardData.children = treeBeardData.children.filter(d => d.code !== "00");
 

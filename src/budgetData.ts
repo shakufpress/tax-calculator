@@ -18,10 +18,13 @@ export type Budget = {
 }
 
 const maxDepth = 3
+function getYear() {
+    return Math.min(new Date().getFullYear(), 2019)
+}
 const getQuery = (offset: number) =>
     `https://next.obudget.org/api/query?query=${
         encodeURIComponent(`select code,parent,title,total_direction_expense from budget where year=${
-            new Date().getFullYear()} and depth < ${maxDepth} and total_direction_expense > 0 offset ${offset}`)}`
+            getYear()} and depth < ${maxDepth} and total_direction_expense > 0 offset ${offset}`)}`
 
 export function fixBudget(rawBudget: RawBudgetEntry[]): Budget {
     //const budget = rawBudget.sort((a, b) => b.total_direction_expense - a.total_direction_expense).map(b => ({[b.code]: {...b}})).reduce((a, o) => Object.assign(a, o), {})  as any as {[code: string]: BudgetEntry}
