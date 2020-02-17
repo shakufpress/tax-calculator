@@ -77,12 +77,7 @@ const Simple = () => {
     }, [history])
 
     return <Switch>
-            <Route exact path="/calc">
-                <h2>ברוכים הבאים למחשבון הפשוט</h2>
-
-                <Link to="/calc/start">יאללה בואו נתקדם</Link>
-            </Route>
-            <Route path="/calc/start">
+            <Route>
             <form onSubmit={submit}>
                     <Row label="מין" id="sex">
                         <select onChange={({target}) => setSex(target.value as 'm' | 'f')} value={sex}>

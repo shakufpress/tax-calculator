@@ -49,21 +49,3 @@ table {
 	border-spacing: 0;
 }
 
-body {
-  margin: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 22px;
-  color: black;
-  --content-width: 980px;
-}
-
- a {
-   color: black;
- }
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}

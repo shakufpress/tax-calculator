@@ -19,7 +19,7 @@ const App: React.FC = () => {
       <Router>
       <QueryParamProvider ReactRouterRoute={Route}>
         <header>
-          <img src="/assets/logo.png" alt="Shakuf logo" className="logo" />
+          <a href="/"><img src="/assets/logo.png" alt="Shakuf logo" className="logo" /></a>
           <div className="nav-area">
             <nav>
         <ul className="">
@@ -32,12 +32,29 @@ const App: React.FC = () => {
         </div>
         </header>
       <main>
-        <Switch>
-          <Route exact path="/"><Home /></Route>
-          <Route path="/about"><About /></Route>
-          <Route path="/calc"><Simple /></Route>
-          <Route path="/contact"><Contact /></Route>
-        </Switch>
+          <About />
+          <div className="welcome">
+            <img src="/assets/circle.png" alt="מחשבון המיסים" />
+            <div className="welcome-area">
+            <div className="welcome-title">ברוכים.ות הבאים.ות<br/>למחשבון המיסים</div>
+            <button className="welcome-button" onClick={() => window.location.href='#calc'}>התחילו כאן >></button>
+            </div>
+          </div>
+          <button className="how-button">לעוד מידע על איך זה עובד לחצו כאן >></button>
+          <div className="banner">
+            <h2>נמאס לכם מפייק-ניוז?</h2>ֿ
+            <h3>
+רוצים לקחת חלק, לבחור, להצביע ואפילו להציע מה נחקור?
+הצטרפו לצוות המו”לים של שקוף ותקחו חלק במהפחת החדשות של ישראל!
+            </h3>
+            <button className="shakuf-link" onClick={() => window.location.href = 'https://shakuf.press'}>בקרו אותנו באתר שקוף</button>
+          </div>
+          <div className="contact">
+            <form>
+            </form>
+          </div>
+
+          <Simple />
       </main>
       <footer>
         <div className="banner">
