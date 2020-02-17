@@ -1,9 +1,44 @@
 .App {
   text-align: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
 html {
   direction: rtl;
+}
+
+header {
+  width: var(--content-width);
+  display: flex;
+}
+
+.nav-area {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: stretch;
+}
+
+.nav-area nav {
+  justify-self: flex-end;
+  flex: 1;
+}
+
+nav ul {
+  flex-direction: row;
+  justify-content: space-between;
+  margin-right: none;
+  display: flex;
+}
+
+.nav-item {
+  flex: 1;
+}
+
+.logo {
+  margin: 70px 10px 10px 10px;
 }
 
 .App-logo {

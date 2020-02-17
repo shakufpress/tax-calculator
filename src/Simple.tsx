@@ -73,16 +73,16 @@ const Simple = () => {
     const history = useHistory()
     const submit = useCallback((e: FormEvent) => {
         e.preventDefault()
-        history.push('/simple/results')
+        history.push('/calc/results')
     }, [history])
 
     return <Switch>
-            <Route exact path="/simple">
+            <Route exact path="/calc">
                 <h2>ברוכים הבאים למחשבון הפשוט</h2>
 
-                <Link to="/simple/start">יאללה בואו נתקדם</Link>
+                <Link to="/calc/start">יאללה בואו נתקדם</Link>
             </Route>
-            <Route path="/simple/start">
+            <Route path="/calc/start">
             <form onSubmit={submit}>
                     <Row label="מין" id="sex">
                         <select onChange={({target}) => setSex(target.value as 'm' | 'f')} value={sex}>
@@ -115,7 +115,7 @@ const Simple = () => {
                   </div>
                   </form>
             </Route>
-            <Route path="/simple/results">
+            <Route path="/calc/results">
                 <Results hasPartner={hasPartner} sex={sex} numChildren={numChildren} partnerIncome={partnerIncome} income={income} budget={budget} />
             </Route>
         </Switch>
