@@ -15,6 +15,7 @@ const About = () => {
     "קבלה" לכל עובד במשק עם פירוט של
     כמה כסף אנחנו משלמים למדינה, בממוצע - ובעיקר לאן בדיוק הכסף הזה הולך.
                 </div>
+                <img src="/assets/arrow.png" className="arrow" alt="arrow" />
             </div>
         </div>
           <div className="welcome">

@@ -171,6 +171,11 @@ main {
   float: left;
 }
 
+.arrow {
+  position: absolute;
+  right: 660px;
+  bottom: -40px;
+}
 .contact {
   display: none;
   height: 410px;
