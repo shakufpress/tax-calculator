@@ -32,15 +32,13 @@ const App: React.FC = () => {
         </div>
         </header>
       <main>
-          <About />
-          <div className="welcome">
-            <img src="/assets/circle.png" alt="מחשבון המיסים" />
-            <div className="welcome-area">
-            <div className="welcome-title">ברוכים.ות הבאים.ות<br/>למחשבון המיסים</div>
-            <button className="welcome-button" onClick={() => window.location.href='#calc'}>התחילו כאן >></button>
-            </div>
-          </div>
-          <button className="how-button">לעוד מידע על איך זה עובד לחצו כאן >></button>
+        <Switch>
+          <Route exact path="/"><About /></Route>
+          <Route exact path="/about"><About /></Route>
+          <Route path="/calc"><Simple /></Route>
+        </Switch>
+      </main>
+      <footer>
           <div className="banner">
             <h2>נמאס לכם מפייק-ניוז?</h2>ֿ
             <h3>
@@ -53,13 +51,6 @@ const App: React.FC = () => {
             <form>
             </form>
           </div>
-
-          <Simple />
-      </main>
-      <footer>
-        <div className="banner">
-          הצטרף אלינו
-        </div>
       </footer>
       </QueryParamProvider>
       </Router>
