@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
-    BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip
+    BarChart, Bar, Cell, XAxis, Tooltip
 } from 'recharts';
 import './Charts.css';
 import { TreeNode } from './formulas';
@@ -53,9 +53,7 @@ export default class TaxBarChart extends PureComponent<TaxBarChartOwnProps, {}> 
                     top: 10, right: 30, left: 20, bottom: 5,
                 }}
             >
-                <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
-                <YAxis />
                 <Tooltip wrapperStyle={{ top: 0, left: 50 }}/>
                 <Bar dataKey="total" fill="#8884d8" label={{ position: 'top' }}>>
                     {data.map((entry, index) => (

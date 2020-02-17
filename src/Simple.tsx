@@ -73,7 +73,7 @@ const Simple = () => {
     const history = useHistory()
     const submit = useCallback((e: FormEvent) => {
         e.preventDefault()
-        history.push('/simple/results/income')
+        history.push('/simple/results')
     }, [history])
 
     return <Switch>
@@ -115,7 +115,7 @@ const Simple = () => {
                   </div>
                   </form>
             </Route>
-            <Route path="/simple/results/:resultKey">
+            <Route path="/simple/results">
                 <Results hasPartner={hasPartner} sex={sex} numChildren={numChildren} partnerIncome={partnerIncome} income={income} budget={budget} />
             </Route>
         </Switch>
