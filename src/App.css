@@ -41,9 +41,13 @@ header {
 }
 
 
-.gradient-about {
+.blue-box {
   min-height: 800px;
+  justify-content: center;
   display: flex;
+  background: var(--blue-gradient);
+  width: 100%;
+  flex: 1;
 }
 
 main {
@@ -54,14 +58,25 @@ main {
   flex-direction: column;
 }
 
-.about {
+.grey-box span {
+  text-align: right;
+}
+
+.grey-box h4 {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+.home, .about {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
 }
-.about-start {
+
+.home-start {
   flex: 1;
   min-height: 800px;
   width: 100%;
@@ -105,13 +120,15 @@ main {
   width: 500px;
 }
 
-.welcome {
+.grey-box {
   width: var(--content-width);
   margin-top: -230px;
   height: 550px;
   display: flex;
   background-color: #ebebeb;
   padding: 20px;
+  font-size: 1rem;
+  color: black;
 }
 
 .welcome-area {
@@ -131,7 +148,7 @@ main {
   align-items: center;
 }
 
-.welcome-button {
+.blue-button {
   align-self: flex-end;
   justify-self: flex-end;
   background: var(--blue-gradient);
@@ -151,6 +168,55 @@ main {
   color: white;
   font-weight: bold;
   font-size: 2rem;
+}
+.about .blue-box {
+  min-height: 500px;
+}
+.about .grey-box {
+  height: auto;
+  flex-direction: column;
+}
+
+.title-baloon {
+  background: url(/assets/baloon.png);
+  height: 99px;
+  width: 637px;
+  display: flex;
+  justify-content: center;
+  align-items: top;
+  padding-top: 20px;
+  position: relative;
+  color: var(--my-cyan);
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+.about .blue-button {
+  margin: 0 0 20px 20px;
+}
+
+.about .arrow {
+  bottom: 250px;
+  left: 40px;
+}
+
+.content {
+  position: relative;
+  width: var(--content-width);
+}
+
+.about .title-baloon {
+  position: absolute;
+  right: 10px;
+  top: 30px;
+}
+
+.about {
+  position: relative;
+}
+
+.about span {
+  margin-bottom: 50px;
 }
 
 .banner {
