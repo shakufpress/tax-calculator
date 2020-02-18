@@ -16,9 +16,9 @@ const YesNo = ({id, label, disabled, defaultValue, onChange}:
 
 const defaultIncome = 7550
 const Row = ({children, label, id}: {children: JSX.Element, label: string, id: string}) =>
-    <div key={id} className="form-group row">
-        <Label id={id}>{label}</Label>
-        <div className="col-sm-2">
+    <div key={id} className="calc-row">
+        <label>{label}</label>
+        <div>
             {React.Children.map(children, s => React.cloneElement(s, {id, name: id, className: "form-control"}))}
         </div>
     </div>
@@ -77,8 +77,18 @@ const Simple = () => {
     }, [history])
 
     return <Switch>
-            <Route>
-            <form onSubmit={submit}>
+            <Route exact path="/calc">
+            <div className="calc">
+        <div className="blue-box">
+            <div className="content">
+                <h3 className="title-baloon">
+                    זה כל כך קל! מסך אחד וסיימנו
+                </h3>
+                <img src="/assets/arrow.png" className="arrow" alt="arrow" />
+            </div>
+        </div>
+          <div className="grey-box">
+            <form onSubmit={submit} className="calc-form">
                     <Row label="מין" id="sex">
                         <select onChange={({target}) => setSex(target.value as 'm' | 'f')} value={sex}>
                         <option value="f">נקבה</option>
@@ -105,10 +115,14 @@ const Simple = () => {
                     </Row>
                     <div className="form-group row">
                     <div className="col-sm-4">
-                      <input type="submit" className="btn btn-primary" value="שלח" />
+                      <input type="submit" className="blue-button submit" value="שלח" />
                     </div>
                   </div>
                   </form>
+            </div>
+          <Link to="/about" className=" how-button">לעוד מידע על איך זה עובד לחצו כאן >></Link>
+    </div> 
+
             </Route>
             <Route path="/calc/results">
                 <Results hasPartner={hasPartner} sex={sex} numChildren={numChildren} partnerIncome={partnerIncome} income={income} budget={budget} />

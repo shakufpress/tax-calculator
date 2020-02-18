@@ -68,7 +68,7 @@ main {
   margin-top: 1rem;
 }
 
-.home, .about {
+.home, .about, .calc {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -164,15 +164,29 @@ main {
   background: linear-gradient(to bottom, var(--blue1), var(--blue2));
   padding: 20px;
   width: var(--content-width);
-  margin: 20px;
+  margin: 50px 0 20px 0;
   color: white;
   font-weight: bold;
   font-size: 2rem;
 }
+
 .about .blue-box {
-  min-height: 500px;
+  min-height: 450px;
 }
 .about .grey-box {
+  height: auto;
+  flex-direction: column;
+}
+.calc .grey-box {
+  height: auto;
+  flex-direction: column;
+}
+
+
+.calc .blue-box {
+  min-height: 450px;
+}
+.calc .grey-box {
   height: auto;
   flex-direction: column;
 }
@@ -188,7 +202,37 @@ main {
   position: relative;
   color: var(--my-cyan);
   font-weight: bold;
-  font-size: 2rem;
+  font-size: 1.5rem;
+}
+
+.calc-form {
+  columns: 2;
+  text-align: right;
+  position: relative;
+}
+
+.calc-form .calc-row {
+  margin-top: .5rem;
+}
+
+.blue-button.submit {
+  padding: 10px;
+  font-size: 1.2rem;
+  position: relative;
+  bottom: 0;
+}
+
+.calc-form label {
+  font-weight: bold;
+}
+
+.calc-form input,select {
+  width: 450px;
+  border-radius: 8px;
+  margin: 5px 0;
+  height: 45px;
+  border: 1px solid grey;
+  padding: 10px;
 }
 
 .about .blue-button {
@@ -196,7 +240,12 @@ main {
 }
 
 .about .arrow {
-  bottom: 250px;
+  bottom: 240px;
+  left: 40px;
+}
+
+.calc .arrow {
+  bottom: 240px;
   left: 40px;
 }
 
@@ -211,7 +260,13 @@ main {
   top: 30px;
 }
 
-.about {
+.calc .title-baloon {
+  position: absolute;
+  right: 10px;
+  top: 30px;
+}
+
+.about, .calc {
   position: relative;
 }
 
