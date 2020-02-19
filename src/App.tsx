@@ -9,7 +9,6 @@ import {
 } from 'react-router-dom'
 import Home from './Home'
 import Simple from './Simple'
-import Complex from './Complex'
 import About from './About'
 import Contact from './Contact'
 
