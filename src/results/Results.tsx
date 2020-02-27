@@ -38,31 +38,32 @@ export interface IncomeData {
 const Results = (incomeData: TaxInput) => {
     const tax: TaxData = useMemo(() => calcTax(incomeData), [
         incomeData
-    ])
+    ]);
 
-const toTreeNode = useCallback((e: BudgetEntry) : TreeNode => ({
-        name: `${e.title}: ${shekel(e.total_direction_expense * tax.personalBudgetFactor)} בשנה`,
-        code: e.code,
-        title: e.title,
-        value: Math.round(e.total_direction_expense * tax.personalBudgetFactor),
-        toggled: true,
-        children: (e.children || []).map(toTreeNode)
-    }), [tax.personalBudgetFactor])
+    const toTreeNode = useCallback((e: BudgetEntry) : TreeNode => ({
+            name: `${e.title}: ${shekel(e.total_direction_expense * tax.personalBudgetFactor)} בשנה`,
+            code: e.code,
+            title: e.title,
+            value: Math.round(e.total_direction_expense * tax.personalBudgetFactor),
+            toggled: true,
+            children: (e.children || []).map(toTreeNode)
+        }), [tax.personalBudgetFactor])
 
-const treeBeardData = useMemo(() => ({
-        name: 'תקציב המדינה',
-        code: '0',
-        title: 'תקציב המדינה',
-        value: incomeData.income,
-        toggled: true,
-        children: incomeData.budget.roots.map(e => toTreeNode(e))
-    }), [incomeData, toTreeNode])
+    const treeBeardData = useMemo(() => ({
+            name: 'תקציב המדינה',
+            code: '0',
+            title: 'תקציב המדינה',
+            value: incomeData.income,
+            toggled: true,
+            children: incomeData.budget.roots.map(e => toTreeNode(e))
+        }), [incomeData, toTreeNode])
 
-    treeBeardData.children = treeBeardData.children.filter(d => d.code !== "00");
+        //treeBeardData.children = treeBeardData.children.filter(d => d.code !== "00");
+        const treeBeardDataResult = treeBeardData.children.filter(d => d.code === "00")[0];
 
-    return (<div>
-                <TaxBarChart data={treeBeardData}/>
-            </div>);
+        return (<div>
+                    <TaxBarChart data={treeBeardDataResult}/>
+                </div>);
 }
 
 export default Results;

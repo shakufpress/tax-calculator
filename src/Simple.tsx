@@ -4,7 +4,6 @@ import { Switch, Route, Link, useHistory }from 'react-router-dom'
 import { downloadBudget, RawBudgetEntry, fixBudget, BudgetEntry } from './budgetData'
 import Results from './results/Results';
 
-const Label = ({children, id}: {children: string, id: string}) => <label htmlFor={id} className="col-sm-2 col-form-label">{children}</label>
 const YesNo = ({id, label, disabled, defaultValue, onChange}:
     {id: string, label: string, disabled?: boolean, defaultValue?: boolean, onChange?: (v: boolean) => void}) => <Row label={label} id={id}>
     <select id={id} name={id} disabled={disabled} defaultValue={defaultValue ? 'true' : 'false'} onChange={(e) => onChange && onChange(e.target.value === 'true')}>
@@ -121,7 +120,7 @@ const Simple = () => {
                   </form>
             </div>
           <Link to="/about" className=" how-button">לעוד מידע על איך זה עובד לחצו כאן >></Link>
-    </div> 
+    </div>
 
             </Route>
             <Route path="/calc/results">

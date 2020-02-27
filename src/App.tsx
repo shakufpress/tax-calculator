@@ -10,7 +10,6 @@ import {
 import Home from './Home'
 import Simple from './Simple'
 import About from './About'
-import Contact from './Contact'
 
 const App: React.FC = () => {
   return (

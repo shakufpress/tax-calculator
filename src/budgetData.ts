@@ -17,7 +17,7 @@ export type Budget = {
     total: number
 }
 
-const maxDepth = 3
+const maxDepth = 4;
 function getYear() {
     return Math.min(new Date().getFullYear(), 2019)
 }
