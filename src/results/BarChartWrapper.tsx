@@ -1,10 +1,12 @@
 import React from "react";
 import { BarChart, XAxis, Tooltip, Bar, Cell } from "recharts";
+import { TreeNode } from "./formulas";
 
 export interface BarChartItem {
     name: string;
     total: number;
     code: string;
+    data: TreeNode;
 }
 
 interface BarChartWrapperProps {
@@ -36,6 +38,22 @@ const data = [
     },
 ];
 
+const CustomTooltip = (data: any) => {
+    if (data.active) {
+        const clickMessage = data.payload[0].payload.data.children.length > 0 ? 'Click me' : '';
+
+        return (
+            <div className="custom-tooltip-wrapper">
+                <p className="title">{`${data.label}`}</p>
+                <p className="label">{`total: ${data.payload[0].value}`}</p>
+                <p className="desc">{clickMessage}</p>
+            </div>
+        );
+    }
+
+    return null;
+  };
+
 const BarChartWrapper = (props: BarChartWrapperProps) => {
     const colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"];
 
@@ -48,7 +66,8 @@ const BarChartWrapper = (props: BarChartWrapperProps) => {
         }}
     >
         <XAxis dataKey="name" />
-        <Tooltip wrapperStyle={{ top: 0, left: 50 }}/>
+        <Tooltip wrapperStyle={{ top: 0, left: 50 }} content={<CustomTooltip data={data}/>}/>
+        {/* <Tooltip wrapperStyle={{ top: 0, left: 50 }} /> */}
         <Bar dataKey="total" onClick={props.handleClick} fill="#8884d8" label={{ position: 'top' }}>
             {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={colors[index % 20]}/>

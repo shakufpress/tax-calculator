@@ -16,3 +16,9 @@ body {
   display: flex;
   flex-wrap: wrap;
 }
+
+.custom-tooltip-wrapper{
+  background-color: white;
+  padding: 10px;
+  border: 1px black solid;
+}

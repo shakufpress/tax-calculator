@@ -23,7 +23,3 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
-
-// app.use(express.static(path.join(__dirname, 'build'));
-
-// app.listen(port, console.log(`shakuf-tax-calculator started on port ${port}`));

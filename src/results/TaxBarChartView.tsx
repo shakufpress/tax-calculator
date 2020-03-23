@@ -15,7 +15,7 @@ const TaxBarChartView = (props: TaxBarChartOwnProps) => {
 
     const cards = props.data.children.map((budgetItem: TreeNode) =>
         <Card title={budgetItem.name} size="small" key={budgetItem.code} style={{ width: '50%' }}>
-            <TaxBarChart data={budgetItem.children} />
+            <TaxBarChart data={budgetItem} />
         </Card>
     );
 
