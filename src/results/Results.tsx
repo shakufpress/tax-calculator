@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback } from 'react';
 import calcTax, { TaxInput, TreeNode } from './formulas'
-import { BudgetEntry, Budget } from '../budgetData';
+import { BudgetEntry } from '../budgetData';
 import TaxBarChart from './TaxBarChartView';
 
 
@@ -32,7 +32,7 @@ export interface IncomeData {
     numChildren: number;
     partnerIncome: number;
     income: number;
-    budget: Budget;
+    budget: BudgetEntry;
 }
 
 const Results = (incomeData: TaxInput) => {
@@ -49,21 +49,14 @@ const Results = (incomeData: TaxInput) => {
             children: (e.children || []).map(toTreeNode)
         }), [tax.personalBudgetFactor])
 
-    const treeBeardData = useMemo(() => ({
-            name: 'תקציב המדינה',
-            code: '0',
-            title: 'תקציב המדינה',
-            value: incomeData.income,
-            toggled: true,
-            children: incomeData.budget.roots.map(e => toTreeNode(e))
-        }), [incomeData, toTreeNode])
+    const treeBeardDataResult = useMemo(() => incomeData.budget && toTreeNode(incomeData.budget), [incomeData, toTreeNode])
 
-        //treeBeardData.children = treeBeardData.children.filter(d => d.code !== "00");
-        const treeBeardDataResult = treeBeardData.children.filter(d => d.code === "00")[0];
+    if (!treeBeardDataResult)
+        return <div className="loading-budget">טוען את התקציב...</div>
 
-        return (<div>
-                    <TaxBarChart data={treeBeardDataResult}/>
-                </div>);
+    return (<div>
+                <TaxBarChart data={treeBeardDataResult}/>
+            </div>);
 }
 
 export default Results;

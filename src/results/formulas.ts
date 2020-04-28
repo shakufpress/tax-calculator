@@ -1,4 +1,4 @@
-import { Budget } from "../budgetData"
+import { BudgetEntry } from '../budgetData'
 
 export type TaxInput = {
     hasPartner: boolean
@@ -6,7 +6,7 @@ export type TaxInput = {
     numChildren: number
     income: number
     partnerIncome: number
-    budget: Budget
+    budget: BudgetEntry
 }
 
 export interface TreeNode {
@@ -66,7 +66,7 @@ export default function caculateTax({hasPartner, sex, numChildren, partnerIncome
     const householdAnnualVat = monthlyVat * 12;
     const myAnnualVat = householdAnnualVat / (hasPartner ? 2 : 1);
     const totalAnnualTax = myAnnualVat + Math.max(0, incomeTax);
-    const totalBudget = budget ? budget.total : 0;
+    const totalBudget = budget ? budget.total_direction_expense : 0;
     const personalBudgetFactor = totalAnnualTax / totalBudget;
 
     return {

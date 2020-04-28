@@ -51,20 +51,25 @@ const Simple = () => {
     const [sex, setSex] = useState<'m' | 'f'>('f')
     const [rawBudget, setRawBudget] = useState<RawBudgetEntry[]>([])
 
+    const storageKey = `budget-${new Date().getFullYear()}`
+
     useEffect(() => {
-        if (rawBudget.length) {
-            localStorage.setItem('budget', JSON.stringify(rawBudget))
-        }
-    }, [rawBudget])
+        if (rawBudget.length)
+            localStorage.setItem(storageKey, JSON.stringify(rawBudget))
+    }, [rawBudget, storageKey])
     useEffect(() => {
-        const budgetJson = localStorage.getItem('budget')
-        if (budgetJson) {
-            setRawBudget(JSON.parse(budgetJson))
-        } else {
-            fetch('/budget-backup.json').then(r => r.json()).then(setRawBudget)
-        }
-        downloadBudget().then(setRawBudget)
-    }, [])
+        (async () => {
+            const budgetJson = localStorage.getItem(storageKey)
+            if (budgetJson) {
+                setRawBudget(JSON.parse(budgetJson))
+            } else {
+                const resp = await fetch('/budget-backup.json')
+                setRawBudget(await resp.json())
+            }
+
+            setRawBudget(await downloadBudget())
+        })()
+    }, [storageKey])
 
 
     const budget = useMemo(() => rawBudget && fixBudget(rawBudget), [rawBudget])

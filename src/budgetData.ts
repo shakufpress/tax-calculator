@@ -11,12 +11,6 @@ export type BudgetEntry = RawBudgetEntry & {
     children: BudgetEntry[]
 }
 
-export type Budget = {
-    budget: {[code: string]: BudgetEntry}
-    roots: BudgetEntry[]
-    total: number
-}
-
 const maxDepth = 8;
 function getYear() {
     return Math.min(new Date().getFullYear(), 2019)
@@ -24,10 +18,9 @@ function getYear() {
 const getQuery = (offset: number) =>
     `https://next.obudget.org/api/query?query=${
         encodeURIComponent(`select code,parent,title,total_direction_expense from budget where year=${
-            getYear()} and depth < ${maxDepth} and total_direction_expense > 0 offset ${offset}`)}`
+            getYear()} and depth < ${maxDepth} and total_direction_expense > 0 order by code ${offset ? `offset ${offset}`: ''}`)}`
 
-export function fixBudget(rawBudget: RawBudgetEntry[]): Budget {
-    //const budget = rawBudget.sort((a, b) => b.total_direction_expense - a.total_direction_expense).map(b => ({[b.code]: {...b}})).reduce((a, o) => Object.assign(a, o), {})  as any as {[code: string]: BudgetEntry}
+export function fixBudget(rawBudget: RawBudgetEntry[]): BudgetEntry {
     const budget = rawBudget.map(b => ({[b.code]: {...b}})).reduce((a, o) => Object.assign(a, o), {})  as any as {[code: string]: BudgetEntry}
     const budgetValues = Object.values(budget)
     for (const code in budget) {
@@ -37,27 +30,22 @@ export function fixBudget(rawBudget: RawBudgetEntry[]): Budget {
         e.children.sort((a, b) => b.total_direction_expense - a.total_direction_expense)
     }
 
-    let roots = budgetValues.filter(({parent}) => !parent)
-    while (roots.length === 1) {
-        roots = roots[0].children
-    }
-    roots.sort((a, b) => b.total_direction_expense - a.total_direction_expense)
-    return {roots, budget, total: budget['00'] ? budget['00'].total_direction_expense : 0}
+    return budgetValues.find(b => b.code === '00') as BudgetEntry
 }
 export async function downloadBudget() : Promise<RawBudgetEntry[]> {
-    let offset = 0
-    let rawBudget : RawBudgetEntry[] = []
-    let total = 0
+    const resp = await (await fetch(getQuery(0))).json()
+    const {rows, total} = resp as {rows: RawBudgetEntry[], total: number}
+    if (rows.length === total)
+        return rows
 
-    while (!rawBudget.length || rawBudget.length !== total) {
-        const resp = await fetch(getQuery(offset));
-        const raw = await resp.json();
-        rawBudget = [...rawBudget, ...raw.rows]
-        if (!raw.rows.length) {
-            break;
-        }
-        offset += raw.rows.length
-    }
+    let budget = rows
 
-    return rawBudget
+    const offsets = Array(Math.ceil(total / rows.length) - 1).fill(0).map((a, i) => (i + 1) * rows.length)
+
+    await Promise.all(offsets.map(async offset => {
+        const {rows} = await (await fetch(getQuery(offset))).json()
+        budget = [...budget, ...rows]
+    }))
+
+    return budget
 }
