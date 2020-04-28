@@ -65,7 +65,11 @@ export default function caculateTax({hasPartner, sex, numChildren, partnerIncome
     const monthlyVat = vatPerDecile[decile || 0];
     const householdAnnualVat = monthlyVat * 12;
     const myAnnualVat = householdAnnualVat / (hasPartner ? 2 : 1);
-    const totalAnnualTax = myAnnualVat + Math.max(0, incomeTax);
+    const ssBelow60PercMonthly = Math.min(5804, income || 0)
+    const ssAbove60PercMonthly = Math.max(0, ((income || 0) - ssBelow60PercMonthly) * .17)
+    const totalSSAnnual = (ssBelow60PercMonthly + ssAbove60PercMonthly) * 12
+
+    const totalAnnualTax = myAnnualVat + Math.max(0, incomeTax) + Math.max(0, totalSSAnnual);
     const totalBudget = budget ? budget.total_direction_expense : 0;
     const personalBudgetFactor = totalAnnualTax / totalBudget;
 
@@ -86,6 +90,9 @@ export default function caculateTax({hasPartner, sex, numChildren, partnerIncome
         annualPartnerIncome,
         bonusPoints,
         taxReduction,
+        ssBelow60PercMonthly,
+        ssAbove60PercMonthly,
+        totalSSAnnual,
         personalBudgetFactor
     }
 }
