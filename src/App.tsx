@@ -10,8 +10,38 @@ import {
 import Home from './Home'
 import Simple from './Simple'
 import About from './About'
+import { downloadBudget, RawBudgetEntry, fixBudget } from './budgetData'
+
+const {useState, useMemo, useEffect} = React
 
 const App: React.FC = () => {
+
+
+    const [rawBudget, setRawBudget] = useState<RawBudgetEntry[]>([])
+
+    const storageKey = `budget-${new Date().getFullYear()}`
+
+    useEffect(() => {
+        if (rawBudget.length)
+            localStorage.setItem(storageKey, JSON.stringify(rawBudget))
+    }, [rawBudget, storageKey])
+    useEffect(() => {
+        (async () => {
+            const budgetJson = localStorage.getItem(storageKey)
+            if (budgetJson) {
+                setRawBudget(JSON.parse(budgetJson))
+            } else {
+                const resp = await fetch('/budget-backup.json')
+                setRawBudget(await resp.json())
+            }
+
+            setRawBudget(await downloadBudget())
+        })()
+    }, [storageKey])
+
+
+    const budget = useMemo(() => rawBudget && fixBudget(rawBudget), [rawBudget])
+  
   return (
     <div className="App">
       <Router>
@@ -33,7 +63,7 @@ const App: React.FC = () => {
         <Switch>
           <Route exact path="/"><Home /></Route>
           <Route exact path="/about"><About /></Route>
-          <Route path="/calc"><Simple /></Route>
+          <Route path="/calc"><Simple budget={budget} /></Route>
         </Switch>
       </main>
       <footer>

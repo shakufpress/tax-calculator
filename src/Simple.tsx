@@ -1,8 +1,8 @@
 import  React, {useState, useMemo, FormEvent, useEffect, useCallback} from 'react'
 import { Switch, Route, Link, useHistory }from 'react-router-dom'
 
-import { downloadBudget, RawBudgetEntry, fixBudget, BudgetEntry } from './budgetData'
 import Results from './results/Results';
+import { BudgetEntry } from './budgetData'
 
 const YesNo = ({id, label, disabled, defaultValue, onChange}:
     {id: string, label: string, disabled?: boolean, defaultValue?: boolean, onChange?: (v: boolean) => void}) => <Row label={label} id={id}>
@@ -43,37 +43,12 @@ const BudgetNodeOutput = ({entry, factor, depth}: {entry: BudgetEntry, factor: n
 
 const shekel = (n: number) => `${Number(Math.floor(n)).toLocaleString()} ₪`
 //const percent = (n: number) => `${Number(n * 100).toFixed(8)}%`
-const Simple = () => {
+const Simple = ({budget} : {budget: BudgetEntry}) => {
     const [hasPartner, setHasPartner] = useState<boolean>(false)
     const [income, setIncome] = useState<number>(defaultIncome)
     const [numChildren, setNumChildren] = useState<number>(0)
     const [partnerIncome, setPartnerIncome] = useState<number>(defaultIncome)
     const [sex, setSex] = useState<'m' | 'f'>('f')
-    const [rawBudget, setRawBudget] = useState<RawBudgetEntry[]>([])
-
-    const storageKey = `budget-${new Date().getFullYear()}`
-
-    useEffect(() => {
-        if (rawBudget.length)
-            localStorage.setItem(storageKey, JSON.stringify(rawBudget))
-    }, [rawBudget, storageKey])
-    useEffect(() => {
-        (async () => {
-            const budgetJson = localStorage.getItem(storageKey)
-            if (budgetJson) {
-                setRawBudget(JSON.parse(budgetJson))
-            } else {
-                const resp = await fetch('/budget-backup.json')
-                setRawBudget(await resp.json())
-            }
-
-            setRawBudget(await downloadBudget())
-        })()
-    }, [storageKey])
-
-
-    const budget = useMemo(() => rawBudget && fixBudget(rawBudget), [rawBudget])
-
     const history = useHistory()
     const submit = useCallback((e: FormEvent) => {
         e.preventDefault()
