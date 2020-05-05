@@ -32,8 +32,8 @@ const BudgetNodeOutput = ({entry, factor, depth}: {entry: BudgetEntry, factor: n
     <React.Fragment>
     <div className="budgetEntry">
         <div className="entryTitle">{entry.title}</div>
-        <div className="total shekel">{shekel(entry.total_direction_expense)}</div>
-        <div className="youSpend shekel">{shekel(entry.total_direction_expense * factor)}</div>
+        <div className="total shekel">{shekel(entry.net_revised)}</div>
+        <div className="youSpend shekel">{shekel(entry.net_revised * factor)}</div>
     </div>
     <div className={`sub-budget sub-budget-${depth}`}>
         {entry.children.map(e => <BudgetNodeOutput key={e.code} entry={e} factor={factor} depth={depth + 1} />)}

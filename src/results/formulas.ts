@@ -70,7 +70,7 @@ export default function caculateTax({hasPartner, sex, numChildren, partnerIncome
     const totalSSAnnual = (ssBelow60PercMonthly + ssAbove60PercMonthly) * 12
 
     const totalAnnualTax = myAnnualVat + Math.max(0, incomeTax) + Math.max(0, totalSSAnnual);
-    const totalBudget = budget ? budget.total_direction_expense : 0;
+    const totalBudget = budget ? budget.net_revised : 0;
     const personalBudgetFactor = totalAnnualTax / totalBudget;
 
     return {

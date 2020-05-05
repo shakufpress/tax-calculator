@@ -41,10 +41,10 @@ const Results = (incomeData: TaxInput) => {
     ]);
 
     const toTreeNode = useCallback((e: BudgetEntry) : TreeNode => ({
-            name: `${e.title}: ${shekel(e.total_direction_expense * tax.personalBudgetFactor)} בשנה`,
+            name: `${e.title}: ${shekel(e.net_revised * tax.personalBudgetFactor)} בשנה`,
             code: e.code,
             title: e.title,
-            value: Math.round(e.total_direction_expense * tax.personalBudgetFactor),
+            value: Math.round(e.net_revised * tax.personalBudgetFactor),
             toggled: true,
             children: (e.children || []).map(toTreeNode)
         }), [tax.personalBudgetFactor])
