@@ -1,7 +1,6 @@
 import React from 'react'
-import {useState, useCallback, FormEvent} from 'react'
-import { Link, useHistory } from 'react-router-dom'
-import calcTax, { TaxInput, TreeNode } from './results/formulas'
+import {useCallback, FormEvent} from 'react'
+import { useHistory } from 'react-router-dom'
 
 const Row = ({children, label, id, style}: {children: JSX.Element, label: string, id: string, style?: any}) =>
     <div key={id} className="calc-row" style={style}>

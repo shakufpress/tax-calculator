@@ -4,8 +4,7 @@ import { QueryParamProvider } from 'use-query-params';
 import {
   BrowserRouter as Router,
   Route,
-  Switch,
-  Link
+  Switch
 } from 'react-router-dom'
 import Home from './Home'
 import Results, {TaxData} from './results/Results'
@@ -58,7 +57,7 @@ const App: React.FC = () => {
     }
 
     const tax: TaxData = useMemo(() => calculateTax({sex, hasPartner, numChildren, partnerIncome, income, budget}), [
-        sex, hasPartner, numChildren, partnerIncome, income
+        sex, hasPartner, numChildren, partnerIncome, income, budget
     ]);
 
 
