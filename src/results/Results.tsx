@@ -1,8 +1,6 @@
 import React, { useMemo, useCallback } from 'react';
-import calcTax, { TaxInput, TreeNode } from './formulas'
-import { BudgetEntry } from '../budgetData';
-import TaxBarChart from './TaxBarChartView';
-
+import { BudgetEntry } from '../budgetData'
+import { TreeNode } from './formulas'
 
 const shekel = (n: number) => `${Number(Math.floor(n)).toLocaleString()} ₪`;
 
@@ -26,20 +24,8 @@ export interface TaxData {
     personalBudgetFactor: number;
 }
 
-export interface IncomeData {
-    hasPartner: boolean;
-    sex: 'm' | 'f';
-    numChildren: number;
-    partnerIncome: number;
-    income: number;
-    budget: BudgetEntry;
-}
 
-const Results = (incomeData: TaxInput) => {
-    const tax: TaxData = useMemo(() => calcTax(incomeData), [
-        incomeData
-    ]);
-
+const Results = ({sex, tax, budget}: {sex: 'm' | 'f', tax: TaxData, budget: BudgetEntry}) => {
     const toTreeNode = useCallback((e: BudgetEntry) : TreeNode => ({
             name: `${e.title}: ${shekel(e.net_revised * tax.personalBudgetFactor)} בשנה`,
             code: e.code,
@@ -49,14 +35,18 @@ const Results = (incomeData: TaxInput) => {
             children: (e.children || []).map(toTreeNode)
         }), [tax.personalBudgetFactor])
 
-    const treeBeardDataResult = useMemo(() => incomeData.budget && toTreeNode(incomeData.budget), [incomeData, toTreeNode])
+    const treeBeardDataResult = useMemo(() => budget && toTreeNode(budget), [budget, toTreeNode])
+    const male = (sex === 'm')
 
-    if (!treeBeardDataResult)
-        return <div className="loading-budget">טוען את התקציב...</div>
+    return <div className="results">
+        <div className="hero">
+            <span>{male ? 'סכום המיסים שאתה משלם בשנה' : 'סכום המיסים שאת משלמת בשנה'}: {}
+            &nbsp;</span>
+            <span className="income">כ-{shekel(tax.totalAnnualTax)}</span>
+        </div>
+        {budget ? <div /> : <div className="loading-budget">טוען את התקציב...</div>}
+    </div>
 
-    return (<div>
-                <TaxBarChart data={treeBeardDataResult}/>
-            </div>);
 }
 
 export default Results;

@@ -65,7 +65,7 @@ export default function caculateTax({hasPartner, sex, numChildren, partnerIncome
     const monthlyVat = vatPerDecile[decile || 0];
     const householdAnnualVat = monthlyVat * 12;
     const myAnnualVat = householdAnnualVat / (hasPartner ? 2 : 1);
-    const ssBelow60PercMonthly = Math.min(5804, income || 0)
+    const ssBelow60PercMonthly = Math.min(5804, income || 0) * 0.035
     const ssAbove60PercMonthly = Math.max(0, ((income || 0) - ssBelow60PercMonthly) * .17)
     const totalSSAnnual = (ssBelow60PercMonthly + ssAbove60PercMonthly) * 12
 

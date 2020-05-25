@@ -8,15 +8,16 @@ import {
   Link
 } from 'react-router-dom'
 import Home from './Home'
-import Simple from './Simple'
-import About from './About'
+import Results, {TaxData} from './results/Results'
+import { BudgetEntry } from './budgetData';
 import { downloadBudget, RawBudgetEntry, fixBudget } from './budgetData'
+import calculateTax from './results/formulas'
 
 const {useState, useMemo, useEffect} = React
 
+const defaultIncome = 7550
+
 const App: React.FC = () => {
-
-
     const [rawBudget, setRawBudget] = useState<RawBudgetEntry[]>([])
 
     const storageKey = `budget-${new Date().getFullYear()}`
@@ -39,24 +40,43 @@ const App: React.FC = () => {
         })()
     }, [storageKey])
 
-
     const budget = useMemo(() => rawBudget && fixBudget(rawBudget), [rawBudget])
+    const [hasPartner, setHasPartner] = useState<boolean>(false)
+    const [income, setIncome] = useState<number>(defaultIncome)
+    const [numChildren, setNumChildren] = useState<number>(0)
+    const [partnerIncome, setPartnerIncome] = useState<number>(defaultIncome)
+    const [sex, setSex] = useState<'m' | 'f'>('f')
   
+
+    interface IncomeData {
+        hasPartner: boolean;
+        sex: 'm' | 'f';
+        numChildren: number;
+        partnerIncome: number;
+        income: number;
+        budget: BudgetEntry;
+    }
+
+    const tax: TaxData = useMemo(() => calculateTax({sex, hasPartner, numChildren, partnerIncome, income, budget}), [
+        sex, hasPartner, numChildren, partnerIncome, income
+    ]);
+
+
   return (
     <div className="App">
       <Router>
       <QueryParamProvider ReactRouterRoute={Route}>
         <header>
           <div className="main-title content">
-
             <a href="/">מחשבון המס של <img src="/assets/logo-short.png" alt="Shakuf logo" style={{verticalAlign: 'bottom'}} height="32" /></a>
           </div>
         </header>
       <main>
         <Switch>
-          <Route exact path="/"><Home /></Route>
-          <Route exact path="/about"><About /></Route>
-          <Route path="/calc"><Simple budget={budget} /></Route>
+          <Route exact path="/"><Home hasPartner={hasPartner} setHasPartner={setHasPartner} setIncome={setIncome} setNumChildren={setNumChildren} setPartnerIncome={setPartnerIncome} setSex={setSex} /></Route>
+          <Route path="/results">
+              <Results tax={tax} sex={sex} budget={budget} />
+          </Route>
         </Switch>
       </main>
       <div className="newsletter">

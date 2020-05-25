@@ -68,30 +68,8 @@ b {
   line-height: 27px;
 } 
 
-@media only screen and (max-width: 800px) {
-  .desktop-only {
-    display: none;
-  }
-
-  .hero-blue {
-    padding: 25px;
-  }
-
-  .calc-form {
-    max-height: auto;
-  }
-
-  .main-title {
-    justify-content: center;
-  }
-}
-
-span {
-  margin-left: 47px;
-  margin-right: 23px;
-  min-width: 345px;
-  max-width: 400px;
-  flex: 1;
+.mobile-only {
+  display: none;
 }
 
 body {
@@ -354,14 +332,18 @@ nav ul {
   color: #09d3ac;
 }
 
-.budget {
-  text-align: right;
+.results .hero {
+  font-size: 27px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.budget svg {
-  display: none;
+.results .income {
+  font-size: 38px;
+  font-weight: 700;
 }
-
 .newsletter {
   background: var(--newsletter);
   display: flex;
@@ -411,4 +393,28 @@ footer a:hover {
 
 footer img {
   vertical-align: bottom;
+}
+
+@media only screen and (max-width: 800px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .results .hero {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-right: 40px;
+  }
+
+  .hero-blue {
+    padding: 25px;
+  }
+
+  .calc-form {
+    max-height: auto;
+  }
+
+  .main-title {
+    justify-content: center;
+  }
 }

@@ -1,26 +1,23 @@
 import React from 'react'
 import {useState, useCallback, FormEvent} from 'react'
 import { Link, useHistory } from 'react-router-dom'
+import calcTax, { TaxInput, TreeNode } from './results/formulas'
 
-const defaultIncome = 7550
-const Row = ({children, label, id}: {children: JSX.Element, label: string, id: string}) =>
-    <div key={id} className="calc-row">
+const Row = ({children, label, id, style}: {children: JSX.Element, label: string, id: string, style?: any}) =>
+    <div key={id} className="calc-row" style={style}>
         <label>{label}</label>
         <div>
             {React.Children.map(children, s => React.cloneElement(s, {id, name: id, className: "form-control"}))}
         </div>
     </div>
 
-const Home = () => {
-    const [hasPartner, setHasPartner] = useState<boolean>(false)
-    const [income, setIncome] = useState<number>(defaultIncome)
-    const [numChildren, setNumChildren] = useState<number>(0)
-    const [partnerIncome, setPartnerIncome] = useState<number>(defaultIncome)
-    const [sex, setSex] = useState<'m' | 'f'>('f')
+type Setter<T> = (value: T) => void
+
+const Home = ({setIncome, setSex, setPartnerIncome, setHasPartner, setNumChildren, hasPartner}: {hasPartner: boolean, setNumChildren: Setter<number>, setIncome: Setter<number>, setSex: Setter<'m' | 'f'>, setPartnerIncome: Setter<number>, setHasPartner: Setter<boolean>}) => {
     const history = useHistory()
     const submit = useCallback((e: FormEvent) => {
         e.preventDefault()
-        history.push('/calc/results')
+        history.push(`/results`)
     }, [history])
 
     return  <div className="start">
@@ -39,27 +36,27 @@ const Home = () => {
             <form onSubmit={submit} className="calc-form">
               <div className="form-fields">
               <Row label="מין" id="sex">
-                  <select onChange={({target}) => setSex(target.value as 'm' | 'f')} value={sex} placeholder="בחר/י">
+                  <select onChange={({target}) => setSex(target.value as 'm' | 'f')} placeholder="בחר/י">
                   <option value="f">נקבה</option>
                   <option value="m">זכר</option>
                   </select>
               </Row>
               <Row label="הכנסה חודשית ממוצעת (כולל קצבאות) ברוטו" id="income">
-                  <input type="number" defaultValue={income} onChange={({target}) => setIncome(+target.value)}  placeholder="בחר/י" />
+                  <input type="number" onChange={({target}) => setIncome(+target.value)}  placeholder="בחר/י" />
               </Row>
               <Row label="מספר ילדים" id="numChildren">
-                  <select defaultValue={numChildren} onChange={({target}) => setNumChildren(+target.value)}  placeholder="בחר/י">
+                  <select onChange={({target}) => setNumChildren(+target.value)}  placeholder="בחר/י">
                       {Array(12).fill(0).map((a, i) => <option key={i}>{i}</option>)}
                   </select>
               </Row>
               <Row label='האם יש לך בן/בת זוג?' id="partner">
-                  <select defaultValue={hasPartner ? 'yes' : 'no'} onChange={({target}) => setHasPartner(target.value === "yes")} placeholder="בחר/י">
-                    <option value="yes">כן</option>
-                    <option value="no">לא</option>
+                  <select onChange={({target}) => setHasPartner(target.value === "yes")} placeholder="בחר/י">
+                    <option value="yes" selected={hasPartner}>כן</option>
+                    <option value="no" selected={!hasPartner}>לא</option>
                   </select>
               </Row>
-              <Row label="הכנסה חודשית ממוצעת של בן/בת הזוג (כולל קצבאות) ברוטו" id="partnerIncome">
-                  <input type="number" defaultValue={partnerIncome} disabled={!hasPartner} onChange={v => setPartnerIncome(+v)} />
+              <Row style={hasPartner ? {} : {display: 'none'}} label="הכנסה חודשית ממוצעת של בן/בת הזוג (כולל קצבאות) ברוטו" id="partnerIncome" >
+                  <input type="number" onChange={v => setPartnerIncome(+v)}  placeholder="בחר/י" />
               </Row>
               </div>
                 <input type="submit" className="blue-button submit" value="חשב" />
