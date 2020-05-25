@@ -47,17 +47,10 @@ const App: React.FC = () => {
       <Router>
       <QueryParamProvider ReactRouterRoute={Route}>
         <header>
-          <a href="/"><img src="/assets/logo.png" alt="Shakuf logo" className="logo" /></a>
-          <div className="nav-area">
-            <nav>
-        <ul className="">
-            <li className="nav-item"><Link className="nav-link" to="/about">מה עושים פה</Link></li>
-            <li className="nav-item"><Link className="nav-link" to="/calc">מחשבון</Link></li>
-            <li className="nav-item"><a className="nav-link" href="https://shakuf.press">אתר שקוף</a></li>
-            <li className="nav-item"><Link className="nav-link" to="/contact">יצירת קשר</Link></li>
-          </ul>
-        </nav>
-        </div>
+          <div className="main-title content">
+
+            <a href="/">מחשבון המס של <img src="/assets/logo-short.png" alt="Shakuf logo" style={{verticalAlign: 'bottom'}} height="32" /></a>
+          </div>
         </header>
       <main>
         <Switch>
@@ -66,19 +59,17 @@ const App: React.FC = () => {
           <Route path="/calc"><Simple budget={budget} /></Route>
         </Switch>
       </main>
+      <div className="newsletter">
+        <div className="newsletter-info">
+        <h2>כל התחקירים - אחת לשבועיים, בלי ספאם.</h2>
+        <h1>הניוזלטר של <img alt="Shakuf" src="/assets/Shakuf-Logo-Main-Transparent-White-Website.png" /></h1>
+        <form>
+        </form>
+        </div>
+        <img src="/assets/desktop.png" alt="desktop" className="desktop-only" />
+      </div>
       <footer>
-          <div className="banner">
-            <h2>נמאס לכם מפייק-ניוז?</h2>ֿ
-            <h3>
-רוצים לקחת חלק, לבחור, להצביע ואפילו להציע מה נחקור?
-הצטרפו לצוות המו”לים של שקוף ותקחו חלק במהפחת החדשות של ישראל!
-            </h3>
-            <button className="shakuf-link" onClick={() => window.location.href = 'https://shakuf.press'}>בקרו אותנו באתר שקוף</button>
-          </div>
-          <div className="contact">
-            <form>
-            </form>
-          </div>
+        <a href="https://shakuf.press">לאתר <img src="/assets/shakuf-white.png" alt="Shakuf" /></a>
       </footer>
       </QueryParamProvider>
       </Router>
