@@ -15,6 +15,7 @@ html {
   --max-content-width: 920px;
   --min-content-margin: 23px;
   --newsletter: #48C4E6;
+  --grey: #909292;
 }
 
 header {
@@ -353,6 +354,35 @@ nav ul {
   height: 187px;
 }
 
+.newsletter form {
+  display: flex;
+  align-items: center;
+}
+
+.newsletter input[type="email"] {
+  color: var(--grey);
+  height: 38px;
+  font-size: 19px;
+  width: 198px;
+  padding: 10px;
+}
+
+.newsletter input[type="submit"] {
+  width: 80px;
+  height: 38px;
+  padding: 8px;
+  background-color: var(--blue-label);
+  color: white;
+  width: 118px;
+  margin: 8px;
+  border-radius: 19px;
+  border-width: 0;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .newsletter-info {
   display: flex;
   flex-direction: column;
@@ -404,6 +434,10 @@ footer img {
     flex-direction: column;
     align-items: flex-start;
     padding-right: 40px;
+  }
+
+  .content {
+    padding-right: 20px;
   }
 
   .hero-blue {

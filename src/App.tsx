@@ -79,11 +79,15 @@ const App: React.FC = () => {
           </Route>
         </Switch>
       </main>
+      </QueryParamProvider>
+      </Router>
       <div className="newsletter">
         <div className="newsletter-info">
         <h2>כל התחקירים - אחת לשבועיים, בלי ספאם.</h2>
         <h1>הניוזלטר של <img alt="Shakuf" src="/assets/Shakuf-Logo-Main-Transparent-White-Website.png" /></h1>
         <form>
+          <input type="email" placeholder={'כתובת הדוא"ל שלך'} />
+          <input type="submit" value="רשמו אותי" />
         </form>
         </div>
         <img src="/assets/desktop.png" alt="desktop" className="desktop-only" />
@@ -91,8 +95,6 @@ const App: React.FC = () => {
       <footer>
         <a href="https://shakuf.press">לאתר <img src="/assets/shakuf-white.png" alt="Shakuf" /></a>
       </footer>
-      </QueryParamProvider>
-      </Router>
     </div>
   );
 }
