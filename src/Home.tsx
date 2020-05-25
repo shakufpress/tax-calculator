@@ -49,9 +49,9 @@ const Home = ({setIncome, setSex, setPartnerIncome, setHasPartner, setNumChildre
                   </select>
               </Row>
               <Row label='האם יש לך בן/בת זוג?' id="partner">
-                  <select onChange={({target}) => setHasPartner(target.value === "yes")} placeholder="בחר/י">
-                    <option value="yes" selected={hasPartner}>כן</option>
-                    <option value="no" selected={!hasPartner}>לא</option>
+                  <select defaultValue={hasPartner ? 'yes' : 'no'} onChange={({target}) => setHasPartner(target.value === "yes")} placeholder="בחר/י">
+                    <option value="yes">כן</option>
+                    <option value="no" >לא</option>
                   </select>
               </Row>
               <Row style={hasPartner ? {} : {display: 'none'}} label="הכנסה חודשית ממוצעת של בן/בת הזוג (כולל קצבאות) ברוטו" id="partnerIncome" >

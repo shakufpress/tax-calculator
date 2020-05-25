@@ -40,7 +40,7 @@ function getChildren(e: BudgetEntry) : BudgetEntry[] {
 
     if (e.children.length === 1)
         if (e.children[0] && e.children[0].children.length > 1)
-            return e.children[0].children
+            return getChildren(e.children[0])
     return e.children
 }
 
@@ -79,15 +79,6 @@ const TopLevelEntry = ({entry, tax, budget}: {entry: BudgetEntry, tax: TaxData, 
     </div>
 }
 const Results = ({sex, tax, budget}: {sex: 'm' | 'f', tax: TaxData, budget: BudgetEntry}) => {
-    const toTreeNode = useCallback((e: BudgetEntry) : TreeNode => ({
-            name: `${e.title}: ${shekel(e.net_revised * tax.personalBudgetFactor)} בשנה`,
-            code: e.code,
-            title: e.title,
-            value: Math.round(e.net_revised * tax.totalAnnualTax / budget.net_revised),
-            toggled: true,
-            children: (e.children || []).map(toTreeNode)
-        }), [tax, budget])
-
     const male = (sex === 'm')
     return <div className="results">
         <div className="hero">
