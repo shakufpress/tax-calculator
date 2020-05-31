@@ -30,7 +30,7 @@ function moneyFor(entry: BudgetEntry, tax: TaxData, budget: BudgetEntry): string
 }
 
 function ValueAndPurpose({entry, tax, budget}: {entry: BudgetEntry, tax: TaxData, budget: BudgetEntry}) {
-    return <React.Fragment><span className="value">{moneyFor(entry, tax, budget)}</span><span className="purpose">עבור&nbsp;{entry.title}</span></React.Fragment>
+    return <React.Fragment><span className="value">{moneyFor(entry, tax, budget)}</span><span className="purpose"><span className="pfor">עבור&nbsp;</span>{entry.title}</span></React.Fragment>
 }
 
 function getChildren(e: BudgetEntry) : BudgetEntry[] {
@@ -48,7 +48,7 @@ const SubEntry = ({entry, tax, budget}: {entry: BudgetEntry, tax: TaxData, budge
     return <React.Fragment> 
         <tr className="sub-entry" key={entry.code} onClick={() => setIsOpen(!isOpen)} data-open={isOpen ? 'yes' : 'no'}>
             <td className="value">{moneyFor(entry, tax, budget)}</td>
-            <td className="purpose">עבור&nbsp;{entry.title}
+            <td className="purpose"><span className="pfor">עבור&nbsp;</span>{entry.title}
             </td>
         </tr>
              <tr className="sub-entry-details"><td colSpan={2}>

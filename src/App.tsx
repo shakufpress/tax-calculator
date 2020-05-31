@@ -7,6 +7,7 @@ import {
   Switch
 } from 'react-router-dom'
 import Home from './Home'
+import About from './About'
 import Results, {TaxData} from './results/Results'
 import { BudgetEntry } from './budgetData';
 import { downloadBudget, RawBudgetEntry, fixBudget } from './budgetData'
@@ -45,7 +46,7 @@ const App: React.FC = () => {
     const [numChildren, setNumChildren] = useState<number>(0)
     const [partnerIncome, setPartnerIncome] = useState<number>(defaultIncome)
     const [sex, setSex] = useState<'m' | 'f'>('f')
-  
+    const [showAbout, setShowAbout] = useState(false)
 
     interface IncomeData {
         hasPartner: boolean;
@@ -72,7 +73,9 @@ const App: React.FC = () => {
         </header>
       <main>
         <Switch>
-          <Route exact path="/"><Home hasPartner={hasPartner} setHasPartner={setHasPartner} setIncome={setIncome} setNumChildren={setNumChildren} setPartnerIncome={setPartnerIncome} setSex={setSex} /></Route>
+          <Route exact path="/"><Home 
+            about={() => setShowAbout(true)}
+            hasPartner={hasPartner} setHasPartner={setHasPartner} setIncome={setIncome} setNumChildren={setNumChildren} setPartnerIncome={setPartnerIncome} setSex={setSex} /></Route>
           <Route path="/results">
               <Results tax={tax} sex={sex} budget={budget} />
           </Route>
@@ -92,8 +95,11 @@ const App: React.FC = () => {
         <img src="/assets/desktop.png" alt="desktop" className="desktop-only" />
       </div>
       <footer>
-        <a href="https://shakuf.press">לאתר <img src="/assets/shakuf-white.png" alt="Shakuf" /></a>
+        <a href="https://shakuf.press" target="shakuf">לאתר <img src="/assets/shakuf-white.png" alt="Shakuf" /></a>
       </footer>
+      {
+        showAbout ? <About close={() => setShowAbout(false)} /> : null
+      }
     </div>
   );
 }

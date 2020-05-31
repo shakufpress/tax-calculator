@@ -12,7 +12,7 @@ const Row = ({children, label, id, style}: {children: JSX.Element, label: string
 
 type Setter<T> = (value: T) => void
 
-const Home = ({setIncome, setSex, setPartnerIncome, setHasPartner, setNumChildren, hasPartner}: {hasPartner: boolean, setNumChildren: Setter<number>, setIncome: Setter<number>, setSex: Setter<'m' | 'f'>, setPartnerIncome: Setter<number>, setHasPartner: Setter<boolean>}) => {
+const Home = ({setIncome, setSex, setPartnerIncome, setHasPartner, setNumChildren, hasPartner, about}: {hasPartner: boolean, setNumChildren: Setter<number>, setIncome: Setter<number>, setSex: Setter<'m' | 'f'>, setPartnerIncome: Setter<number>, setHasPartner: Setter<boolean>, about: () => void}) => {
     const history = useHistory()
     const submit = useCallback((e: FormEvent) => {
         e.preventDefault()
@@ -26,7 +26,7 @@ const Home = ({setIncome, setSex, setPartnerIncome, setHasPartner, setNumChildre
           <span>
 לאן הולכים כספי המיסים שלנו? כמה כסף אתה משלם על בני עקיבא או השומר הצעיר? כמה את משלמת על רכבת ישראל? כמה אנחנו משלמים על חובות המדינה? 
 <p><b>מלאו את הפרטים שלכם ותגלו!</b></p>
- אל דאגה, המידע שלכם אינו נשמר :)        
+ אל דאגה, המידע אינו נשמר :)        
           </span>
           </div>
         </div>
@@ -59,6 +59,7 @@ const Home = ({setIncome, setSex, setPartnerIncome, setHasPartner, setNumChildre
               </Row>
               </div>
                 <input type="submit" className="blue-button submit" value="חשב" />
+                <button className="about-link" onClick={() => about()}>איך זה עובד?</button>
           </form>
         </div>
         </div>
