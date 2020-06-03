@@ -12,7 +12,7 @@ const Row = ({children, label, id, style}: {children: JSX.Element, label: string
 
 type Setter<T> = (value: T) => void
 
-const Home = ({setIncome, setSex, setPartnerIncome, setHasPartner, setNumChildren, hasPartner, about}: {hasPartner: boolean, setNumChildren: Setter<number>, setIncome: Setter<number>, setSex: Setter<'m' | 'f'>, setPartnerIncome: Setter<number>, setHasPartner: Setter<boolean>, about: () => void}) => {
+const Home = ({setIncome, setSex, setPartnerIncome, setHasPartner, setNumChildren, hasPartner}: {hasPartner: boolean, setNumChildren: Setter<number>, setIncome: Setter<number>, setSex: Setter<'m' | 'f'>, setPartnerIncome: Setter<number>, setHasPartner: Setter<boolean>}) => {
     const history = useHistory()
     const submit = useCallback((e: FormEvent) => {
         e.preventDefault()
@@ -59,7 +59,6 @@ const Home = ({setIncome, setSex, setPartnerIncome, setHasPartner, setNumChildre
               </Row>
               </div>
                 <input type="submit" className="blue-button submit" value="חשב" />
-                <button className="about-link" onClick={() => about()}>איך זה עובד?</button>
           </form>
         </div>
         </div>

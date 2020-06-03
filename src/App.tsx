@@ -68,13 +68,13 @@ const App: React.FC = () => {
       <QueryParamProvider ReactRouterRoute={Route}>
         <header>
           <div className="main-title content">
-            <a href="/">מחשבון המס של <img src="/assets/logo-short.png" alt="Shakuf logo" style={{verticalAlign: 'bottom'}} height="32" /></a>
+            <a href="/">מחשבון המס של&nbsp;<img src="/assets/logo-short.png" alt="Shakuf logo" style={{verticalAlign: 'bottom'}} height="32" /></a>
           </div>
+            <button className="about-link" onClick={() => setShowAbout(true)}>איך זה עובד?</button>
         </header>
       <main>
         <Switch>
-          <Route exact path="/"><Home 
-            about={() => setShowAbout(true)}
+          <Route exact path="/"><Home
             hasPartner={hasPartner} setHasPartner={setHasPartner} setIncome={setIncome} setNumChildren={setNumChildren} setPartnerIncome={setPartnerIncome} setSex={setSex} /></Route>
           <Route path="/results">
               <Results tax={tax} sex={sex} budget={budget} />
@@ -100,6 +100,13 @@ const App: React.FC = () => {
       {
         showAbout ? <About close={() => setShowAbout(false)} /> : null
       }
+      <div className="credits">
+      תודה לליאור תבורי, נעם רוזנטל, תמר וודקוק, דורון זמיר וזוהר גיא על בניית המחשבון
+      <br />
+      <a href="http://www.freepik.com">Designed by pikisuperstar / Freepik</a>
+      <br />
+      <a href="http://www.freepik.com">Designed by Freepik</a>
+      </div>
     </div>
   );
 }

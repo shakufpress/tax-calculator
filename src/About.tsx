@@ -1,7 +1,10 @@
 import React from 'react'
 
 const About = ({close}: {close: () => void}) => {
-    return  <div className="about-container" onClick={() => close()}>
+    return  <div className="about-container" onClick={e => {
+        close()
+        e.stopPropagation()
+    }}>
     <div className="about">
             <h2>לאן הולכים כספי המסים שלי?</h2> 
             <p>
