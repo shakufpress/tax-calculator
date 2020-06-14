@@ -74,6 +74,11 @@ b {
   max-width: var(--max-content-width);
 }
 
+.start content {
+  display: flex;
+  align-items: stretch;
+}
+
 .strip {
   display: flex;
   justify-content: center;
@@ -82,12 +87,25 @@ b {
 }
 
 .hero {
-  height: 222px;
+  min-height: 222px;
   background: var(--blue-gradient);
   font-size: var(--mid-size);
   color: white;
   line-height: var(--larger-size);
 } 
+
+.calculator {
+  flex: 1;
+}
+
+.explain {
+  font-size: var(--small-size);
+  padding: 10px 0;
+}
+
+.explain a {
+  color: var(--blue-title);
+}
 
 .mobile-only {
   display: none;

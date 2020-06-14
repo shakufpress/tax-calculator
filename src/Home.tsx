@@ -1,6 +1,6 @@
 import React from 'react'
 import {useCallback, FormEvent} from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Link } from 'react-router-dom'
 
 const Row = ({children, label, id, style}: {children: JSX.Element, label: string, id: string, style?: any}) =>
     <div key={id} className="calc-row" style={style}>
@@ -12,7 +12,7 @@ const Row = ({children, label, id, style}: {children: JSX.Element, label: string
 
 type Setter<T> = (value: T) => void
 
-const Home = ({setIncome, setSex, setPartnerIncome, setHasPartner, setNumChildren, hasPartner}: {hasPartner: boolean, setNumChildren: Setter<number>, setIncome: Setter<number>, setSex: Setter<'m' | 'f'>, setPartnerIncome: Setter<number>, setHasPartner: Setter<boolean>}) => {
+const Home = ({setIncome, setSex, setPartnerIncome, setHasPartner, setNumChildren, hasPartner, showAbout}: {hasPartner: boolean, setNumChildren: Setter<number>, setIncome: Setter<number>, setSex: Setter<'m' | 'f'>, setPartnerIncome: Setter<number>, setHasPartner: Setter<boolean>, showAbout: () => void}) => {
     const history = useHistory()
     const submit = useCallback((e: FormEvent) => {
         e.preventDefault()
@@ -22,11 +22,13 @@ const Home = ({setIncome, setSex, setPartnerIncome, setHasPartner, setNumChildre
     return  <div className="start">
         <div className="hero strip">
           <div className="content">
-          <img src="/assets/calculator.png" className="desktop-only" alt="calculator" height="222" />
-          <span>
+          <img src="/assets/calculator.png" className="desktop-only" alt="calculator" height="100%" />
+          <span className="explain">
 לאן הולכים כספי המיסים שלנו? כמה כסף אתה משלם על בני עקיבא או השומר הצעיר? כמה את משלמת על רכבת ישראל? כמה אנחנו משלמים על חובות המדינה? 
 <p><b>מלאו את הפרטים שלכם ותגלו!</b></p>
- אל דאגה, המידע אינו נשמר :)        
+<p>אל דאגה, המידע אינו נשמר :)</p>
+<br />
+<p>המחשבון מבוסס על הנחות סטטיסטיות (ראו <Link to="/about" onClick={() => showAbout()}>איך זה עובד?</Link>) ולוקח בחשבון רק את שלושת המיסים העיקריים: מס הכנסה, ביטוח לאומי ומע"מ.</p>
           </span>
           </div>
         </div>

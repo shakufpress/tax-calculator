@@ -75,6 +75,10 @@ const App: React.FC = () => {
       <main>
         <Switch>
           <Route exact path="/"><Home
+            showAbout={() => setShowAbout(!showAbout)}
+            hasPartner={hasPartner} setHasPartner={setHasPartner} setIncome={setIncome} setNumChildren={setNumChildren} setPartnerIncome={setPartnerIncome} setSex={setSex} /></Route>
+          <Route exact path="/about"><Home
+            showAbout={() => setShowAbout(!showAbout)}
             hasPartner={hasPartner} setHasPartner={setHasPartner} setIncome={setIncome} setNumChildren={setNumChildren} setPartnerIncome={setPartnerIncome} setSex={setSex} /></Route>
           <Route path="/results">
               <Results tax={tax} sex={sex} budget={budget} />
