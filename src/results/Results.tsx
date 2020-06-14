@@ -23,18 +23,20 @@ export interface TaxData {
     personalBudgetFactor: number;
 }
 
-function moneyFor(entry: BudgetEntry, tax: TaxData, budget: BudgetEntry): string {
+function moneyFor(entry: BudgetEntry, tax: TaxData, budget: BudgetEntry, factor = 1): string {
     if (!budget || !budget.net_revised)
         return ''
-    return shekel(Math.round(entry.net_revised * tax.totalAnnualTax / budget.net_revised))
+    return shekel(Math.round(entry.net_revised * tax.totalAnnualTax / budget.net_revised * (1 / factor)))
 }
 
-function ValueAndPurpose({entry, tax, budget}: {entry: BudgetEntry, tax: TaxData, budget: BudgetEntry}) {
-    return <React.Fragment><span className="value">{moneyFor(entry, tax, budget)}</span><span className="purpose"><span className="pfor">עבור&nbsp;</span>{entry.title}</span></React.Fragment>
+function ValueAndPurpose({entry, tax, budget, showMonthly}: {entry: BudgetEntry, tax: TaxData, budget: BudgetEntry, showMonthly?: boolean}) {
+    return <React.Fragment><span className="value">{moneyFor(entry, tax, budget)}</span><span className="purpose"><span className="pfor">עבור&nbsp;</span>{entry.title}</span>
+        {showMonthly ? <span className="monthly">&nbsp;({moneyFor(entry, tax, budget, 12)} בחודש)</span> : null}
+    </React.Fragment>
 }
 
-function getChildren(e: BudgetEntry) : BudgetEntry[] {
-    if (!e.children || !e.children.length)
+function getChildren(e?: BudgetEntry) : BudgetEntry[] {
+    if (!e || !e.children || !e.children.length)
         return []
 
     if (e.children.length === 1)
@@ -68,7 +70,7 @@ const TopLevelEntry = ({entry, tax, budget}: {entry: BudgetEntry, tax: TaxData, 
         <svg className="arrow" viewBox="0 0 24 24" preserveAspectRatio="none">
             <path d="M 24 0 L 0 12 L 24 24" />
         </svg>
-        <ValueAndPurpose entry={entry} budget={budget} tax={tax} />
+        <ValueAndPurpose entry={entry} budget={budget} tax={tax} showMonthly={true} />
         </div>
         <table className="details">
             <tbody>
@@ -77,8 +79,31 @@ const TopLevelEntry = ({entry, tax, budget}: {entry: BudgetEntry, tax: TaxData, 
         </table>
     </div>
 }
+
+function filterBudget(budget: BudgetEntry | null, str: string) : BudgetEntry | null {
+    if (!str || str.length < 3)
+        return budget
+
+    if (!budget)
+        return budget
+
+    if (budget.title.indexOf(str) >= 0)
+        return budget
+
+    const children = budget.children.map(c => filterBudget(c, str)).filter(a => a) as BudgetEntry[]
+    if (!children.length)
+        return null
+
+    if (children.length === 1 && children[0].children.length > 0)
+        return children[0]
+
+    return {...budget, children}
+}
+
 const Results = ({sex, tax, budget}: {sex: 'm' | 'f', tax: TaxData, budget: BudgetEntry}) => {
+    const [search, setSearch] = useState('')
     const male = (sex === 'm')
+    const filteredBudget = filterBudget(budget, search) as BudgetEntry
     return <div className="results">
         <div className="hero">
             <div className="content">
@@ -87,12 +112,15 @@ const Results = ({sex, tax, budget}: {sex: 'm' | 'f', tax: TaxData, budget: Budg
             <span className="income">כ-{shekel(tax.totalAnnualTax)}</span>
             </div>
         </div>
+        { budget ? <form className="search-form"><div className="content">
+            <input className="search-bar" placeholder="חיפוש" type="text" onInput={e => setSearch((e.target as HTMLInputElement).value)} />
+        </div></form> : null}
         {budget ? <div className="budget strip">
             <div className="content">
             <span className="desktop-only">לאן זה הולך?</span>
             <div className="budget-tree">
             {
-                getChildren(budget).map(e => <TopLevelEntry entry={e} tax={tax} budget={budget} key={e.code} />)
+                getChildren(filteredBudget).map(e => <TopLevelEntry entry={e} tax={tax} budget={filteredBudget} key={e.code} />)
             }
             </div>
             </div>

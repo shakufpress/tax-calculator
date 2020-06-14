@@ -369,7 +369,6 @@ footer img {
   display: none;
   transition: all 100ms;
   opacity: 0;
-  margin: 12px;
 }
 
 .top-level-entry[data-open="yes"] .details {
@@ -377,8 +376,17 @@ footer img {
   display: block;
   opacity: 1;
   display: table;
+  border-spacing: 0 6px;
+  border-collapse: separate;
 }
 
+.details tr {
+  background: white;
+}
+
+.fpcredit {
+  font-size: 10px;
+}
 .sub-entry-details {
   display: none;
 }
@@ -391,7 +399,7 @@ footer img {
   display: table-row;
   height: 37px;
   font-size: var(--mid-size);
-  background: white;
+  border-spacing: 6px;
 }
 
 .details .sub-entry > *:not(.sub-entry-details) {
@@ -400,7 +408,7 @@ footer img {
 }
 .details .sub-entry > .value {
   border-right: 6px solid var(--cyan);
-  border-bottom: 5px solid var(--grey-bg);
+  background: white;
 }
 
 .sub-entry-details {
@@ -427,10 +435,6 @@ footer img {
 .sub-entry-details .value {
   min-width: 50px;
   display: inline-block;
-}
-
-.details .sub-entry > .value, .details .sub-entry > .purpose {
-  border-bottom: 5px solid var(--grey-bg);
 }
 
 .details .sub-entry >  .value {
@@ -523,9 +527,62 @@ footer img {
   color: var(--foreground);
 }
 
+.search-form {
+  display: flex;
+  justify-content: center;
+}
+.search-bar {
+  margin: 10px;
+  width: 70vw;
+  max-width: 300px;
+  border-radius: 8px;
+  min-height: 45px;
+  border: 1px solid grey;
+  padding: 10px;
+}
+
+.search-form .content::after {
+  content: '🔍';
+}
+
+.monthly {
+  font-size: var(--tiny-size);
+  margin-right: 3px;
+}
+
 @media only screen and (max-width: 800px) {
   .desktop-only {
     display: none;
+  }
+
+  .search-bar {
+    max-width: 280px;
+  }
+
+  .monthly {
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .entry-heading .purpose .pfor {
+    display: none;
+  }
+
+  .purpose {
+    text-overflow: ellipsis;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .details .sub-entry .value {
+    width: 0;
+    white-space: nowrap;
+  }
+
+  .details .sub-entry .purpose {
+    width: 100%;
+    white-space: nowrap;
   }
 
   .results .hero .content {
@@ -541,7 +598,9 @@ footer img {
   }
 
   .entry-heading > .value {
-    min-width: 70px;
+    min-width: 0;
+    white-space: nowrap;
+    margin-left: 10px;
   }
 
   .hero-blue {

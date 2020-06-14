@@ -107,9 +107,7 @@ const App: React.FC = () => {
       <div className="credits">
       תודה לליאור תבורי, נעם רוזנטל, תמר וודקוק, דורון זמיר וזוהר גיא על בניית המחשבון
       <br />
-      <a href="http://www.freepik.com">Designed by pikisuperstar / Freepik</a>
-      <br />
-      <a href="http://www.freepik.com">Designed by Freepik</a>
+      <a className="f" href="http://www.freepik.com">Designed by pikisuperstar / Freepik</a>
       </div>
     </div>
   );
