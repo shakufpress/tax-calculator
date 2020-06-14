@@ -530,6 +530,8 @@ footer img {
 .search-form {
   display: flex;
   justify-content: center;
+  position: sticky;
+  top: 0;
 }
 .search-bar {
   margin: 10px;
