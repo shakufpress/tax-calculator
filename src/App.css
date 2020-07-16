@@ -522,6 +522,10 @@ footer img {
   text-align: right;
   color: var(--foreground);
 }
+
+.decile-content {
+  align-self: center;
+}
 .credits {
   font-size: var(--tiny-size);
   color: var(--foreground);
