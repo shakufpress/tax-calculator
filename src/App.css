@@ -517,6 +517,11 @@ footer img {
 
 }
 
+.decile-disclaimer {
+  padding: var(--tiny-size);
+  text-align: right;
+  color: var(--foreground);
+}
 .credits {
   font-size: var(--tiny-size);
   color: var(--foreground);

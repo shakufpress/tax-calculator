@@ -112,6 +112,10 @@ const Results = ({sex, tax, budget}: {sex: 'm' | 'f', tax: TaxData, budget: Budg
             <span className="income">כ-{shekel(tax.totalAnnualTax)}</span>
             </div>
         </div>
+        {(tax.decile || 0) < 3 ? 
+        <div className="decile-disclaimer">
+            בעקבות ההון השחור, ייתכן שסכום המס שיוצג במחשבון יהיה גבוה מהקיים בפועל, במיוחד בעשירונים התחתונים.
+        </div> : null }
         { budget ? <form className="search-form"><div className="content">
             <input className="search-bar" placeholder="חיפוש" type="text" onInput={e => setSearch((e.target as HTMLInputElement).value)} />
         </div></form> : null}
